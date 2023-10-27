@@ -81,5 +81,6 @@ dependencies {
     implementation("androidx.hilt:hilt-work:$hilt_hilt_version")
     kapt("androidx.hilt:hilt-compiler:$hilt_hilt_version")
 
+    // 没有这个库运行出错，不知道原因
     implementation("androidx.work:work-runtime-ktx:2.8.1")
 }

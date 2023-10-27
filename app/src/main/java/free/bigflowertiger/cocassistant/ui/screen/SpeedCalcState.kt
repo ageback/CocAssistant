@@ -1,8 +1,8 @@
 package free.bigflowertiger.cocassistant.ui.screen
 
 /**
- * @param researchMinutes 实验室研究时间，单位：分钟
+ * @param actualResearchMinutes 加速24倍后的实验室研究时间，单位：分钟
  */
 data class SpeedCalcState(
-    val researchMinutes: Int
+    val actualResearchMinutes: Int = 0
 )
