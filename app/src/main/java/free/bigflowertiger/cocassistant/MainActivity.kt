@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Column {
                         SpeedCalcScreen()
-//                        CountdownTimerScreen()
+                        CountdownTimerScreen()
                     }
                 }
             }

@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -34,10 +35,9 @@ fun CountdownTimerScreen() {
     // 创建 Ringtone 对象
     val ringtone = remember { RingtoneManager.getRingtone(context, ringtoneUri) }
 
-    timer = object : CountDownTimer(timeRemaining, 1000) {
+    timer = object : CountDownTimer(timeRemaining, 1000L) {
         override fun onTick(millisUntilFinished: Long) {
-//            timeRemaining = (millisUntilFinished / 1000).toInt()
-            timeRemaining = millisUntilFinished
+            timeRemaining = millisUntilFinished / 1000
         }
 
         override fun onFinish() {
@@ -45,8 +45,10 @@ fun CountdownTimerScreen() {
             ringtone.play()
         }
     }
-    DisposableEffect(timer) {
+    LaunchedEffect(key1 = Unit, block = {
         timer?.start()
+    })
+    DisposableEffect(timer) {
         onDispose {
             timer?.cancel()
         }
