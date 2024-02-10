@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import free.bigflowertiger.cocassistant.worker.WorkerHelper
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -36,10 +37,11 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
                 }
 
                 override fun onFinish() {
-                    viewModelScope.launch {
-                        // 在计时器完成时播放系统默认的通知铃声
-                        _uiEventFlow.emit(UiEvent.OnTimerFinish)
-                    }
+//                    viewModelScope.launch {
+//                        // 在计时器完成时播放系统默认的通知铃声
+//                        _uiEventFlow.emit(UiEvent.OnTimerFinish)
+//                    }
+                    WorkerHelper.setCountDownWorker()
                 }
             }.start()
         }

@@ -58,6 +58,8 @@ dependencies {
 
     val dagger_hilt_version = "2.50"
     val hilt_hilt_version = "1.1.0"
+    val accompanist_version = "0.34.0"
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -83,4 +85,5 @@ dependencies {
 
     // 没有这个库运行出错，不知道原因
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("com.google.accompanist:accompanist-permissions:$accompanist_version")
 }
