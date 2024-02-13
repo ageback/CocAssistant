@@ -5,13 +5,11 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -95,16 +93,21 @@ fun SpeedCalcScreen(
             Button(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 onClick = { viewModel.onEvent(SpeedCalcEvent.StartTimer) }) {
-                Text(text = "Start Count")
+                Text(text = "开始倒计时")
             }
             Button(onClick = { viewModel.onEvent(SpeedCalcEvent.StopTimer) }) {
-                Text(text = "Stop Count")
+                Text(text = "停止倒计时")
             }
         }
 
-
+        Text(text = "剩余时间：")
         Text(
-            text = "Time Remaining: ${state.timeRemaining} seconds",
+            text = "${state.timeRemaining / 60} 分钟",
+            style = MaterialTheme.typography.displayMedium,
+            fontSize = 24.sp
+        )
+        Text(
+            text = "${state.timeRemaining % 60} 秒",
             style = MaterialTheme.typography.displayMedium,
             fontSize = 24.sp
         )
