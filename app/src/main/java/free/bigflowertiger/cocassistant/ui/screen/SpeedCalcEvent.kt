@@ -4,8 +4,12 @@ sealed class SpeedCalcEvent {
     data object StartTimer : SpeedCalcEvent()
     data object StopTimer : SpeedCalcEvent()
 
+    data class ChangeInputHours(val hours: Int) : SpeedCalcEvent()
+
+    data class ChangeInputMinutes(val minutes: Int) : SpeedCalcEvent()
+
     /**
-     * 计算实际研究速度（加速24倍）
+     * 加速倍数
      */
-    data class CalcActualResearchMinutes(val hours: Long, val minutes: Long) : SpeedCalcEvent()
+    data class ChangeSpeedMultiple(val multiple: Int) : SpeedCalcEvent()
 }

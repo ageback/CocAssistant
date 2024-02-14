@@ -2,19 +2,12 @@ package free.bigflowertiger.cocassistant.ui.screen
 
 import android.os.CountDownTimer
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import free.bigflowertiger.cocassistant.worker.WorkerHelper
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,13 +44,28 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
             _state.value = _state.value.copy(timeRemaining = 0)
         }
 
-        is SpeedCalcEvent.CalcActualResearchMinutes -> {
-            getAcceleratedTime(event.hours, event.minutes)
+        is SpeedCalcEvent.ChangeSpeedMultiple -> {
+            _state.value = _state.value.copy(speedMultiple = event.multiple)
+            calcAcceleratedTime()
         }
+
+        is SpeedCalcEvent.ChangeInputHours -> {
+            _state.value = _state.value.copy(inputHours = event.hours)
+            calcAcceleratedTime()
+        }
+
+        is SpeedCalcEvent.ChangeInputMinutes -> {
+            _state.value = _state.value.copy(inputMinutes = event.minutes)
+            calcAcceleratedTime()
+        }
+
     }
 
-    private fun getAcceleratedTime(hours: Long, minutes: Long) {
-        _state.value = _state.value.copy(timeRemaining = (hours * 60 + minutes) * 60 / 24)
+    private fun calcAcceleratedTime() {
+        _state.value =
+            _state.value.copy(
+                timeRemaining = (state.value.inputHours * 60L + state.value.inputMinutes) * 60 / state.value.speedMultiple
+            )
     }
 
     sealed class UiEvent {

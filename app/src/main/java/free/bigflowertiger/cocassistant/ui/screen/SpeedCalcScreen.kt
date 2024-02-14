@@ -12,10 +12,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
@@ -36,8 +33,6 @@ fun SpeedCalcScreen(
     val ringtone = remember { RingtoneManager.getRingtone(context, ringtoneUri) }
 
     val state = viewModel.state.value
-    var inputHour by remember { mutableStateOf("") }
-    var inputMinute by remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEventFlow.collectLatest { event ->
@@ -46,7 +41,6 @@ fun SpeedCalcScreen(
                     ringtone.play()
                 }
             }
-
         }
     }
     Column(modifier = Modifier.padding(4.dp)) {
@@ -54,38 +48,40 @@ fun SpeedCalcScreen(
             label = {
                 Text(text = "研究时间（小时）")
             },
-            value = inputHour,
+            value = state.inputHours.toString(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
             ),
             onValueChange = {
-                inputHour = it
-                viewModel.onEvent(
-                    SpeedCalcEvent.CalcActualResearchMinutes(
-                        inputHour.toLongOrNull() ?: 0,
-                        inputMinute.toLongOrNull() ?: 0
-                    )
-                )
+                viewModel.onEvent(SpeedCalcEvent.ChangeInputHours(it.toIntOrNull() ?: 0))
             }
         )
         OutlinedTextField(
             label = {
                 Text(text = "研究时间（分钟）")
             },
-            value = inputMinute,
+            value = state.inputMinutes.toString(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
             ),
             onValueChange = {
-                inputMinute = it
-                viewModel.onEvent(
-                    SpeedCalcEvent.CalcActualResearchMinutes(
-                        inputHour.toLongOrNull() ?: 0,
-                        inputMinute.toLongOrNull() ?: 0
-                    )
-                )
+                viewModel.onEvent(SpeedCalcEvent.ChangeInputMinutes(it.toIntOrNull() ?: 0))
+            }
+        )
+
+        OutlinedTextField(
+            label = {
+                Text(text = "加速倍数")
+            },
+            value = state.speedMultiple.toString(),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Number
+            ),
+            onValueChange = {
+                viewModel.onEvent(SpeedCalcEvent.ChangeSpeedMultiple(it.toIntOrNull() ?: 1))
             }
         )
 
