@@ -9,7 +9,7 @@ data class SpeedCalcState(
     /**
      * 加速倍数
      */
-    val speedMultiple: String = "",
+    val speedMultiple: String = "24",
 
     /**
      * 输入小时数

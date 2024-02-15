@@ -85,8 +85,9 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
     private fun calcAcceleratedTime() {
         _state.value =
             _state.value.copy(
-                timeRemaining = (state.value.inputHours.toInt() * 60L + state.value.inputMinutes.toInt())
-                        * 60 / state.value.speedMultiple.toInt()
+                timeRemaining = ((state.value.inputHours.toLongOrNull() ?: 0) * 60L
+                        + (state.value.inputMinutes.toLongOrNull() ?: 0L)) * 60
+                        / (state.value.speedMultiple.toLongOrNull() ?: 1)
             )
     }
 
