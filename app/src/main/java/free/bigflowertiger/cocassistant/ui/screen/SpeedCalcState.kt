@@ -9,14 +9,14 @@ data class SpeedCalcState(
     /**
      * 加速倍数
      */
-    val speedMultiple: Int = 24,
+    val speedMultiple: String = "",
 
     /**
      * 输入小时数
      */
-    var inputHours: Int = 0,
+    var inputHours: String = "",
     /**
      * 输入分钟数
      */
-    var inputMinutes: Int = 0
+    var inputMinutes: String = ""
 )

@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,9 +35,13 @@ fun SpeedCalcScreen(
 
     val state = viewModel.state.value
 
+    val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
         viewModel.uiEventFlow.collectLatest { event ->
             when (event) {
+                is SpeedCalcViewModel.UiEvent.ShowSnackbar->{
+                    snackbarHostState.showSnackbar(message = event.msg)
+                }
                 is SpeedCalcViewModel.UiEvent.OnTimerFinish -> {
                     ringtone.play()
                 }
@@ -48,26 +53,26 @@ fun SpeedCalcScreen(
             label = {
                 Text(text = "研究时间（小时）")
             },
-            value = state.inputHours.toString(),
+            value = state.inputHours,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
             ),
             onValueChange = {
-                viewModel.onEvent(SpeedCalcEvent.ChangeInputHours(it.toIntOrNull() ?: 0))
+                viewModel.onEvent(SpeedCalcEvent.ChangeInputHours(it))
             }
         )
         OutlinedTextField(
             label = {
                 Text(text = "研究时间（分钟）")
             },
-            value = state.inputMinutes.toString(),
+            value = state.inputMinutes,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
             ),
             onValueChange = {
-                viewModel.onEvent(SpeedCalcEvent.ChangeInputMinutes(it.toIntOrNull() ?: 0))
+                viewModel.onEvent(SpeedCalcEvent.ChangeInputMinutes(it))
             }
         )
 
@@ -75,13 +80,13 @@ fun SpeedCalcScreen(
             label = {
                 Text(text = "加速倍数")
             },
-            value = state.speedMultiple.toString(),
+            value = state.speedMultiple,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
             ),
             onValueChange = {
-                viewModel.onEvent(SpeedCalcEvent.ChangeSpeedMultiple(it.toIntOrNull() ?: 1))
+                viewModel.onEvent(SpeedCalcEvent.ChangeSpeedMultiple(it))
             }
         )
 

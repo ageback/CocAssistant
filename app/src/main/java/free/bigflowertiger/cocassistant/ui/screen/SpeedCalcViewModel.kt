@@ -3,11 +3,14 @@ package free.bigflowertiger.cocassistant.ui.screen
 import android.os.CountDownTimer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import free.bigflowertiger.cocassistant.worker.WorkerHelper
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,30 +48,50 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
         }
 
         is SpeedCalcEvent.ChangeSpeedMultiple -> {
-            _state.value = _state.value.copy(speedMultiple = event.multiple)
-            calcAcceleratedTime()
+            onInput(event.multiple) {
+                _state.value = _state.value.copy(speedMultiple = it.toString())
+            }
         }
 
         is SpeedCalcEvent.ChangeInputHours -> {
-            _state.value = _state.value.copy(inputHours = event.hours)
-            calcAcceleratedTime()
+            onInput(event.hours) {
+                _state.value = _state.value.copy(inputHours = it.toString())
+            }
+
         }
 
         is SpeedCalcEvent.ChangeInputMinutes -> {
-            _state.value = _state.value.copy(inputMinutes = event.minutes)
+            onInput(event.minutes) {
+                _state.value = _state.value.copy(inputMinutes = it.toString())
+            }
+        }
+    }
+
+    private fun onInput(input: String, block: (String) -> Unit) =
+        try {
+            val intNumber = if (input.isBlank()) "" else input.toInteger()
+            block(intNumber.toString())
             calcAcceleratedTime()
+        } catch (ex: Exception) {
+            viewModelScope.launch {
+                _uiEventFlow.emit(UiEvent.ShowSnackbar("请输入一个整数。"))
+            }
         }
 
+    private fun String.toInteger(): Int {
+        return toIntOrNull() ?: throw Exception("Not an integer")
     }
 
     private fun calcAcceleratedTime() {
         _state.value =
             _state.value.copy(
-                timeRemaining = (state.value.inputHours * 60L + state.value.inputMinutes) * 60 / state.value.speedMultiple
+                timeRemaining = (state.value.inputHours.toInt() * 60L + state.value.inputMinutes.toInt())
+                        * 60 / state.value.speedMultiple.toInt()
             )
     }
 
     sealed class UiEvent {
+        data class ShowSnackbar(val msg: String) : UiEvent()
         data object OnTimerFinish : UiEvent()
     }
 }
