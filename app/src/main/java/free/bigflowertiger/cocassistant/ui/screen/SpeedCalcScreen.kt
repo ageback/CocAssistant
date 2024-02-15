@@ -6,7 +6,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PauseCircle
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.PlayCircle
+import androidx.compose.material.icons.outlined.Stop
+import androidx.compose.material.icons.outlined.StopCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
@@ -39,9 +48,10 @@ fun SpeedCalcScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEventFlow.collectLatest { event ->
             when (event) {
-                is SpeedCalcViewModel.UiEvent.ShowSnackbar->{
+                is SpeedCalcViewModel.UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(message = event.msg)
                 }
+
                 is SpeedCalcViewModel.UiEvent.OnTimerFinish -> {
                     ringtone.play()
                 }
@@ -91,13 +101,23 @@ fun SpeedCalcScreen(
         )
 
         Row {
-            Button(
+            IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                onClick = { viewModel.onEvent(SpeedCalcEvent.StartTimer) }) {
-                Text(text = "开始倒计时")
+                onClick = { viewModel.onEvent(SpeedCalcEvent.StartTimer) }
+            ) {
+                Icon(imageVector = Icons.Outlined.PlayCircle, contentDescription = "Start")
             }
-            Button(onClick = { viewModel.onEvent(SpeedCalcEvent.StopTimer) }) {
-                Text(text = "停止倒计时")
+            IconButton(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                onClick = { viewModel.onEvent(SpeedCalcEvent.PauseTimer) }
+            ) {
+                Icon(imageVector = Icons.Outlined.PauseCircle, contentDescription = "Pause/Resume")
+            }
+            IconButton(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                onClick = { viewModel.onEvent(SpeedCalcEvent.StopTimer) }
+            ) {
+                Icon(imageVector = Icons.Outlined.StopCircle, contentDescription = "Stop")
             }
         }
 

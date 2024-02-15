@@ -3,7 +3,6 @@ package free.bigflowertiger.cocassistant.ui.screen
 import android.os.CountDownTimer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,45 +23,54 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: SpeedCalcEvent) = when (event) {
         is SpeedCalcEvent.StartTimer -> {
-            timer = object : CountDownTimer(
-                state.value.timeRemaining * 1000,
-                1000L
-            ) {
-                override fun onTick(millisUntilFinished: Long) {
-                    _state.value = _state.value.copy(timeRemaining = millisUntilFinished / 1000)
-                }
-
-                override fun onFinish() {
-//                    viewModelScope.launch {
-//                        // 在计时器完成时播放系统默认的通知铃声
-//                        _uiEventFlow.emit(UiEvent.OnTimerFinish)
-//                    }
-                    WorkerHelper.setCountDownWorker()
-                }
-            }.start()
+            resetTimer()
+            timer?.start()
         }
 
         is SpeedCalcEvent.StopTimer -> {
+            resetTimer()
+        }
+
+        is SpeedCalcEvent.ResumeTimer -> {
+            timer?.start()
+        }
+        is SpeedCalcEvent.PauseTimer -> {
             timer?.cancel()
-            _state.value = _state.value.copy(timeRemaining = 0)
         }
 
         is SpeedCalcEvent.ChangeSpeedMultiple -> {
             onInput(event.multiple) {
-                _state.value = _state.value.copy(speedMultiple = it.toString())
+                _state.value = _state.value.copy(speedMultiple = it)
             }
         }
 
         is SpeedCalcEvent.ChangeInputHours -> {
             onInput(event.hours) {
-                _state.value = _state.value.copy(inputHours = it.toString())
+                _state.value = _state.value.copy(inputHours = it)
             }
 
         }
 
         is SpeedCalcEvent.ChangeInputMinutes -> {
             onInput(event.minutes) {
-                _state.value = _state.value.copy(inputMinutes = it.toString())
+                _state.value = _state.value.copy(inputMinutes = it)
+            }
+        }
+    }
+
+    private fun resetTimer() {
+        timer?.cancel()
+        calcAcceleratedTime()
+        timer = object : CountDownTimer(
+            state.value.timeRemaining * 1000,
+            1000L
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                _state.value = _state.value.copy(timeRemaining = millisUntilFinished / 1000)
+            }
+
+            override fun onFinish() {
+                WorkerHelper.setCountDownWorker()
             }
         }
     }
@@ -86,7 +94,7 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
         _state.value =
             _state.value.copy(
                 timeRemaining = ((state.value.inputHours.toLongOrNull() ?: 0) * 60L
-                        + (state.value.inputMinutes.toLongOrNull() ?: 0L)) * 60
+                        + (state.value.inputMinutes.toLongOrNull() ?: 0)) * 60
                         / (state.value.speedMultiple.toLongOrNull() ?: 1)
             )
     }

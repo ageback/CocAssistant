@@ -60,6 +60,7 @@ dependencies {
     val hilt_hilt_version = "1.1.0"
     val accompanist_version = "0.34.0"
 
+    implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
