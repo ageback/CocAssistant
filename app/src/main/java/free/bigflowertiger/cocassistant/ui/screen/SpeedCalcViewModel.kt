@@ -30,18 +30,17 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: SpeedCalcEvent) = when (event) {
         is SpeedCalcEvent.StartTimer -> {
-            resetTimer()
-            timer?.start()
+            startTimer()
             _state.value = _state.value.copy(timerStatus = TimeStatus.Started)
         }
 
         is SpeedCalcEvent.StopTimer -> {
-            resetTimer()
+            startTimer(start = false)
             _state.value = _state.value.copy(timerStatus = TimeStatus.Stopped)
         }
 
         is SpeedCalcEvent.ResumeTimer -> {
-            timer?.start()
+            startTimer(reset = false)
             _state.value = _state.value.copy(timerStatus = TimeStatus.Resumed)
         }
 
@@ -70,9 +69,9 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun resetTimer() {
+    private fun startTimer(reset: Boolean = true, start: Boolean = true) {
         timer?.cancel()
-        calcAcceleratedTime()
+        if (reset) initTimeRemaining()
         timer = object : CountDownTimer(
             state.value.timeRemaining * 1000,
             1000L
@@ -85,13 +84,15 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
                 WorkerHelper.setCountDownWorker()
             }
         }
+
+        if (start) timer?.start()
     }
 
     private fun onInput(input: String, block: (String) -> Unit) =
         try {
             val intNumber = if (input.isBlank()) "" else input.toInteger()
             block(intNumber.toString())
-            calcAcceleratedTime()
+            initTimeRemaining()
         } catch (ex: Exception) {
             viewModelScope.launch {
                 _uiEventFlow.emit(UiEvent.ShowSnackbar("请输入一个整数。"))
@@ -102,7 +103,7 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
         return toIntOrNull() ?: throw Exception("Not an integer")
     }
 
-    private fun calcAcceleratedTime() {
+    private fun initTimeRemaining() {
         _state.value =
             _state.value.copy(
                 timeRemaining = ((state.value.inputHours.toLongOrNull() ?: 0) * 60L
