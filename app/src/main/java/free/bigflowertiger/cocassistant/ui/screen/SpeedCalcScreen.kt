@@ -7,13 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PauseCircle
-import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.PlayCircle
-import androidx.compose.material.icons.outlined.Stop
+import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.StopCircle
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -103,18 +100,33 @@ fun SpeedCalcScreen(
         Row {
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
+                enabled = state.timerStatus == TimeStatus.Stopped,
                 onClick = { viewModel.onEvent(SpeedCalcEvent.StartTimer) }
             ) {
                 Icon(imageVector = Icons.Outlined.PlayCircle, contentDescription = "Start")
             }
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                onClick = { viewModel.onEvent(SpeedCalcEvent.PauseTimer) }
+                enabled = state.timerStatus != TimeStatus.Stopped,
+                onClick = {
+                    if (state.timerStatus != TimeStatus.Paused) {
+                        viewModel.onEvent(SpeedCalcEvent.PauseTimer)
+                    } else {
+                        viewModel.onEvent(SpeedCalcEvent.ResumeTimer)
+                    }
+                }
             ) {
-                Icon(imageVector = Icons.Outlined.PauseCircle, contentDescription = "Pause/Resume")
+                val icon = when (state.timerStatus) {
+                    TimeStatus.Started -> Icons.Outlined.PauseCircle
+                    TimeStatus.Paused -> Icons.Outlined.RestartAlt
+                    TimeStatus.Resumed -> Icons.Outlined.PauseCircle
+                    TimeStatus.Stopped -> Icons.Outlined.PauseCircle
+                }
+                Icon(imageVector = icon, contentDescription = "Pause/Resume")
             }
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
+                enabled = state.timerStatus != TimeStatus.Stopped,
                 onClick = { viewModel.onEvent(SpeedCalcEvent.StopTimer) }
             ) {
                 Icon(imageVector = Icons.Outlined.StopCircle, contentDescription = "Stop")

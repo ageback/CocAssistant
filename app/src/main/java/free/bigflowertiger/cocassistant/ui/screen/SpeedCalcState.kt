@@ -1,6 +1,7 @@
 package free.bigflowertiger.cocassistant.ui.screen
 
 data class SpeedCalcState(
+    val timerStatus: TimeStatus = TimeStatus.Stopped,
     /**
      * 倒计时剩余时间，秒
      */

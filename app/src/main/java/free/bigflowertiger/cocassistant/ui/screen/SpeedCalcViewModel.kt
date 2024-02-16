@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+enum class TimeStatus {
+    Stopped,
+    Started,
+    Paused,
+    Resumed
+}
+
 @HiltViewModel
 class SpeedCalcViewModel @Inject constructor() : ViewModel() {
     private val _state = mutableStateOf(SpeedCalcState())
@@ -25,17 +32,22 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
         is SpeedCalcEvent.StartTimer -> {
             resetTimer()
             timer?.start()
+            _state.value = _state.value.copy(timerStatus = TimeStatus.Started)
         }
 
         is SpeedCalcEvent.StopTimer -> {
             resetTimer()
+            _state.value = _state.value.copy(timerStatus = TimeStatus.Stopped)
         }
 
         is SpeedCalcEvent.ResumeTimer -> {
             timer?.start()
+            _state.value = _state.value.copy(timerStatus = TimeStatus.Resumed)
         }
+
         is SpeedCalcEvent.PauseTimer -> {
             timer?.cancel()
+            _state.value = _state.value.copy(timerStatus = TimeStatus.Paused)
         }
 
         is SpeedCalcEvent.ChangeSpeedMultiple -> {
