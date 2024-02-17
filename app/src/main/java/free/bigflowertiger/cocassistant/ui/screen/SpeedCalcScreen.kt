@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
@@ -100,14 +101,15 @@ fun SpeedCalcScreen(
         Row {
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                enabled = state.timerStatus == TimeStatus.Stopped,
+                enabled = state.startEnabled,
                 onClick = { viewModel.onEvent(SpeedCalcEvent.StartTimer) }
             ) {
                 Icon(imageVector = Icons.Outlined.PlayCircle, contentDescription = "Start")
             }
+
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                enabled = state.timerStatus != TimeStatus.Stopped,
+                enabled = state.pauseResumeEnabled,
                 onClick = {
                     if (state.timerStatus != TimeStatus.Paused) {
                         viewModel.onEvent(SpeedCalcEvent.PauseTimer)
@@ -116,33 +118,30 @@ fun SpeedCalcScreen(
                     }
                 }
             ) {
-                val icon = when (state.timerStatus) {
-                    TimeStatus.Started -> Icons.Outlined.PauseCircle
-                    TimeStatus.Paused -> Icons.Outlined.RestartAlt
-                    TimeStatus.Resumed -> Icons.Outlined.PauseCircle
-                    TimeStatus.Stopped -> Icons.Outlined.PauseCircle
-                }
-                Icon(imageVector = icon, contentDescription = "Pause/Resume")
+                Icon(imageVector = state.pauseResumeIcon, contentDescription = "Pause/Resume")
             }
+
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                enabled = state.timerStatus != TimeStatus.Stopped,
+                enabled = state.stopEnabled,
                 onClick = { viewModel.onEvent(SpeedCalcEvent.StopTimer) }
             ) {
                 Icon(imageVector = Icons.Outlined.StopCircle, contentDescription = "Stop")
             }
         }
 
-        Text(text = "剩余时间：")
-        Text(
-            text = "${state.timeRemaining / 60} 分钟",
-            style = MaterialTheme.typography.displayMedium,
-            fontSize = 24.sp
-        )
-        Text(
-            text = "${state.timeRemaining % 60} 秒",
-            style = MaterialTheme.typography.displayMedium,
-            fontSize = 24.sp
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "剩余时间：",
+                fontSize = 24.sp
+            )
+            val minutes = state.timeRemaining / 60
+            val seconds = state.timeRemaining % 60
+            Text(
+                text = String.format("%02d:%02d", minutes, seconds),
+                style = MaterialTheme.typography.displayMedium,
+                fontSize = 24.sp
+            )
+        }
     }
 }
