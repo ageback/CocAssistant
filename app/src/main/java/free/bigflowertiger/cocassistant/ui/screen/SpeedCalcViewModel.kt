@@ -35,8 +35,7 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
         }
 
         is SpeedCalcEvent.StopTimer -> {
-            startTimer(start = false)
-            _state.value = _state.value.copy(timerStatus = TimeStatus.Stopped)
+            stopTimer()
         }
 
         is SpeedCalcEvent.ResumeTimer -> {
@@ -69,6 +68,11 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    private fun stopTimer() {
+        startTimer(start = false)
+        _state.value = _state.value.copy(timerStatus = TimeStatus.Stopped)
+    }
+
     private fun startTimer(reset: Boolean = true, start: Boolean = true) {
         timer?.cancel()
         if (reset) initTimeRemaining()
@@ -82,6 +86,7 @@ class SpeedCalcViewModel @Inject constructor() : ViewModel() {
 
             override fun onFinish() {
                 WorkerHelper.setCountDownWorker()
+                stopTimer()
             }
         }
 
