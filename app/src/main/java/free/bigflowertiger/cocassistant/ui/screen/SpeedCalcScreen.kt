@@ -4,12 +4,11 @@ import android.media.RingtoneManager
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.PlayCircle
-import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.StopCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,8 +55,14 @@ fun SpeedCalcScreen(
             }
         }
     }
-    Column(modifier = Modifier.padding(4.dp)) {
+    Column(
+        modifier = Modifier.padding(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             label = {
                 Text(text = "研究时间（小时）")
             },
@@ -72,6 +77,9 @@ fun SpeedCalcScreen(
             }
         )
         OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             label = {
                 Text(text = "研究时间（分钟）")
             },
@@ -87,6 +95,9 @@ fun SpeedCalcScreen(
         )
 
         OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             label = {
                 Text(text = "加速倍数")
             },
