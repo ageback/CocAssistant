@@ -62,6 +62,7 @@ fun SpeedCalcScreen(
                 Text(text = "研究时间（小时）")
             },
             value = state.inputHours,
+            enabled = state.inputEnabled,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
@@ -74,6 +75,7 @@ fun SpeedCalcScreen(
             label = {
                 Text(text = "研究时间（分钟）")
             },
+            enabled = state.inputEnabled,
             value = state.inputMinutes,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
@@ -89,6 +91,7 @@ fun SpeedCalcScreen(
                 Text(text = "加速倍数")
             },
             value = state.speedMultiple,
+            enabled = state.inputEnabled,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number

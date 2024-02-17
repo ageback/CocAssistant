@@ -25,14 +25,17 @@ data class SpeedCalcState(
      */
     var inputMinutes: String = ""
 ) {
-    val startEnabled get() = timerStatus == TimeStatus.Stopped
+    val startEnabled get() = timeRemaining > 0 && timerStatus == TimeStatus.Stopped
     val pauseResumeEnabled get() = timerStatus != TimeStatus.Stopped
     val stopEnabled get() = timerStatus != TimeStatus.Stopped
 
-    val pauseResumeIcon get()= when (timerStatus) {
-        TimeStatus.Started -> Icons.Outlined.PauseCircle
-        TimeStatus.Paused -> Icons.Outlined.RestartAlt
-        TimeStatus.Resumed -> Icons.Outlined.PauseCircle
-        TimeStatus.Stopped -> Icons.Outlined.PauseCircle
-    }
+    val inputEnabled get() = timerStatus == TimeStatus.Stopped
+
+    val pauseResumeIcon
+        get() = when (timerStatus) {
+            TimeStatus.Started -> Icons.Outlined.PauseCircle
+            TimeStatus.Paused -> Icons.Outlined.RestartAlt
+            TimeStatus.Resumed -> Icons.Outlined.PauseCircle
+            TimeStatus.Stopped -> Icons.Outlined.PauseCircle
+        }
 }
