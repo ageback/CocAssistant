@@ -21,12 +21,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -40,9 +44,14 @@ fun SpeedCalcScreen(
     val ringtone = remember { RingtoneManager.getRingtone(context, ringtoneUri) }
 
     val state = viewModel.state.value
-
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
+        delay(200)
+        focusRequester.requestFocus()
+        keyboardController?.show()
+
         viewModel.uiEventFlow.collectLatest { event ->
             when (event) {
                 is SpeedCalcViewModel.UiEvent.ShowSnackbar -> {
@@ -61,6 +70,7 @@ fun SpeedCalcScreen(
     ) {
         OutlinedTextField(
             modifier = Modifier
+                .focusRequester(focusRequester)
                 .fillMaxWidth()
                 .padding(8.dp),
             label = {
