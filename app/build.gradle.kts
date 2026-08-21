@@ -16,7 +16,7 @@ plugins {
 
 android {
     namespace = "free.bigflowertiger.cocassistant"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "free.bigflowertiger.cocassistant"
