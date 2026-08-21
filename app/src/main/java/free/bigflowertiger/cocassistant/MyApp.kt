@@ -12,7 +12,6 @@ import javax.inject.Inject
 class MyApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
-    lateinit var weatherSource: String
     override fun onCreate() {
         super.onCreate()
         Inner.instance = this
@@ -25,7 +24,6 @@ class MyApp : Application(), Configuration.Provider {
     }
 
     companion object {
-
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
     }
