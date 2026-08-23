@@ -1,4 +1,4 @@
-package free.bigflowertiger.cocassistant.nitification
+package free.bigflowertiger.cocassistant.notification
 
 import android.app.Notification
 import android.app.NotificationChannel

@@ -3,13 +3,13 @@ package free.bigflowertiger.cocassistant.worker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import free.bigflowertiger.cocassistant.MyApp
+import free.bigflowertiger.cocassistant.TimerApp
 import java.util.concurrent.TimeUnit
 
 const val WORK_NAME_COUNT_DOWN = "COUNT_DOWN"
 
 object WorkerHelper {
-    private val workManager = WorkManager.getInstance(MyApp.context)
+    private val workManager = WorkManager.getInstance(TimerApp.context)
 
     fun setCountDownWorker() {
         val request = OneTimeWorkRequest.Builder(CounterDownWorker::class.java)

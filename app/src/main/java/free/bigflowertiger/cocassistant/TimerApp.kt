@@ -9,7 +9,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MyApp : Application(), Configuration.Provider {
+class TimerApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
     override fun onCreate() {
@@ -20,7 +20,7 @@ class MyApp : Application(), Configuration.Provider {
 
     private object Inner {
         @SuppressLint("StaticFieldLeak")
-        lateinit var instance: MyApp
+        lateinit var instance: TimerApp
     }
 
     companion object {

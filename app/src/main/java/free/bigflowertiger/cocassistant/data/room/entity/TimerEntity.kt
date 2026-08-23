@@ -4,11 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "timer")
-data class CounterTimer(
-    @PrimaryKey(autoGenerate = true)
+@Entity(tableName = "timers")
+data class TimerEntity(
+    @PrimaryKey
     @ColumnInfo(name = "id")
-    val id: Long = 0,
+    val id: String,
 
     @ColumnInfo(name = "title")
     val title: String,
@@ -24,7 +24,8 @@ data class CounterTimer(
 )
 
 enum class TimerStatus{
-    Paused,
-    Running,
-    Stopped
+    RUNNING,
+    PAUSED,
+    FINISHED,
+    CANCELLED
 }

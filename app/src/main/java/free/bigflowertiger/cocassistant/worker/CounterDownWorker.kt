@@ -6,8 +6,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import free.bigflowertiger.cocassistant.MyApp.Companion.context
-import free.bigflowertiger.cocassistant.nitification.NotificationHelper
+import free.bigflowertiger.cocassistant.TimerApp.Companion.context
+import free.bigflowertiger.cocassistant.notification.NotificationHelper
 
 @HiltWorker
 open class CounterDownWorker @AssistedInject constructor(

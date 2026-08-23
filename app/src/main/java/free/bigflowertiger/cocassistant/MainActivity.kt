@@ -1,7 +1,11 @@
 package free.bigflowertiger.cocassistant
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +21,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import free.bigflowertiger.cocassistant.ui.screen.SpeedCalcScreen
 import free.bigflowertiger.cocassistant.ui.theme.CocAssistantTheme
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -55,4 +60,20 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    fun requestExactAlarmPermission(
+        context: Context
+    ) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+            val intent = Intent(
+                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                "package:${context.packageName}".toUri()
+            )
+
+            context.startActivity(intent)
+        }
+    }
+
 }
