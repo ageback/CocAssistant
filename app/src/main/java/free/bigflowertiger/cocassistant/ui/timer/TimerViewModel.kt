@@ -18,6 +18,15 @@ class TimerViewModel @Inject constructor(
     private val repository: TimerRepository,
     private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
+    init {
+        createForTest()
+    }
+
+    fun createForTest() {
+        createTimer("AA", 10000)
+        createTimer("BB", 10000)
+    }
+
     val timersFlow: StateFlow<List<TimerEntity>> = repository.observeRunningTimers()
         .stateIn(
             scope = viewModelScope,

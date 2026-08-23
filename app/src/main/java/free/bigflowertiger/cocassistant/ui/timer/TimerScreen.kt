@@ -1,0 +1,52 @@
+package free.bigflowertiger.cocassistant.ui.timer
+
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+
+@Composable
+fun TimerScreen() {
+    val context = LocalContext.current
+    val viewModel = hiltViewModel<TimerViewModel>()
+    val timers by viewModel.timersFlow.collectAsState()
+    fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val intent = Intent(
+                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                "package:${context.packageName}".toUri()
+            )
+
+            context.startActivity(intent)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (!viewModel.canScheduleExactAlarms()) {
+            requestExactAlarmPermission()
+        }
+    }
+
+    Scaffold() { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues),
+        ) {
+            items(items = timers, key = { it.id }) { timer ->
+                TimerItem(timer)
+            }
+        }
+
+    }
+}

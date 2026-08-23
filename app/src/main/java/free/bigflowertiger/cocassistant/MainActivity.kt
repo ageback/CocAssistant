@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import free.bigflowertiger.cocassistant.ui.screen.SpeedCalcScreen
 import free.bigflowertiger.cocassistant.ui.theme.CocAssistantTheme
 import androidx.core.net.toUri
+import free.bigflowertiger.cocassistant.ui.timer.TimerScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -53,7 +54,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                     ) { paddingValues ->
                         Column(modifier = Modifier.padding(paddingValues)) {
-                            SpeedCalcScreen()
+//                            SpeedCalcScreen()
+                            TimerScreen()
                         }
                     }
                 }
