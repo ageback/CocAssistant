@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun SpeedCalcScreen(
@@ -48,7 +49,7 @@ fun SpeedCalcScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = true) {
-        delay(200)
+        delay(200.milliseconds)
         focusRequester.requestFocus()
         keyboardController?.show()
 
