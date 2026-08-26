@@ -19,7 +19,7 @@ class TimerViewModel @Inject constructor(
     private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
     init {
-        createForTest()
+//        createForTest()
     }
 
     fun createForTest() {
