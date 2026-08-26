@@ -102,4 +102,5 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.compose.pickers)
 }
