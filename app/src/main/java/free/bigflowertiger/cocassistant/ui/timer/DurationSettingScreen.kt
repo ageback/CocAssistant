@@ -8,14 +8,33 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
 fun DurationSettingScreen(
     modifier: Modifier = Modifier
 ) {
+    var inputValue by remember { mutableLongStateOf(0L) }
+    fun appendDigit(digit: Int) {
+        inputValue = (inputValue * 10 + digit) % 1_000_000
+    }
+
+    fun getDuration(): Duration {
+        val hours = inputValue / 10_000
+        val minutes = (inputValue / 100) % 100
+        val seconds = inputValue % 100
+        return hours.hours + minutes.minutes + seconds.seconds
+    }
     Column(modifier = modifier) {
         Row() {
             Text(text = "5小时45分27秒")
@@ -25,18 +44,22 @@ fun DurationSettingScreen(
                 repeat(3) {
                     column(0.33f)
                 }
-                repeat(5) {
+                repeat(4) {
                     row(GridTrackSize.Auto)
                 }
                 gap(8.dp)
             }
         ) {
-            repeat(12) { index ->
-                TextCard(
-                    label = "${index + 1}",
-                    modifier = modifier,
-                )
+            repeat(9) { index ->
+                val number = index + 1
+                NumberCard(number = number) {
+                    appendDigit(number)
+                }
             }
+
+            TextCard(label = "00")
+            TextCard(label = "0")
+            TextCard(label = "X")
         }
         Row {
             Button(onClick = {}) {
