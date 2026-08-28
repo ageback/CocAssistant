@@ -14,6 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
@@ -56,12 +57,11 @@ class MainActivity : ComponentActivity() {
 
                 if (locationPermissionState.allPermissionsGranted) {
                     Scaffold(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize()
                     ) { paddingValues ->
-                        Column(modifier = Modifier.padding(paddingValues)) {
-//                            SpeedCalcScreen()
-                            TimerScreen()
-                        }
+                        TimerScreen(modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxWidth())
                     }
                 }
             }
