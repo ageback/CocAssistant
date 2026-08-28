@@ -23,12 +23,9 @@ composeBom = "2026.08.00"
 hiltNavigationCompose = "1.4.0"
 room = "2.8.4"
 lifecycleRuntimeKtx = "2.11.0"
-composePickers = "0.7.0"
 foundation = "1.13.0-alpha02"
 
 [libraries]
-compose-pickers = { module = "io.github.kez-lab:compose-pickers", version.ref = "composePickers" }
-
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
