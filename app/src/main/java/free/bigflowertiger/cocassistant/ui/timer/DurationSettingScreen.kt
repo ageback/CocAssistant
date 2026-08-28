@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -25,9 +26,8 @@ fun DurationSettingScreen(
     modifier: Modifier = Modifier
 ) {
     var inputValue by remember { mutableLongStateOf(0L) }
-    fun appendDigit(digit: Int) {
-        inputValue = (inputValue * 10 + digit) % 1_000_000
-    }
+    var duration: Duration by remember { mutableStateOf(0.seconds) }
+
 
     fun getDuration(): Duration {
         val hours = inputValue / 10_000
@@ -35,9 +35,19 @@ fun DurationSettingScreen(
         val seconds = inputValue % 100
         return hours.hours + minutes.minutes + seconds.seconds
     }
+
+    fun removeDigit() {
+        inputValue /= 10
+        duration = getDuration()
+    }
+
+    fun appendDigit(digit: Int) {
+        inputValue = (inputValue * 10 + digit) % 1_000_000
+        duration = getDuration()
+    }
     Column(modifier = modifier) {
         Row() {
-            Text(text = "5小时45分27秒")
+            Text(text = duration.toString())
         }
         Grid(
             config = {
@@ -59,7 +69,9 @@ fun DurationSettingScreen(
 
             TextCard(label = "00")
             TextCard(label = "0")
-            TextCard(label = "X")
+            TextCard(label = "X") {
+                removeDigit()
+            }
         }
         Row {
             Button(onClick = {}) {
