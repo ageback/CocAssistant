@@ -23,7 +23,6 @@ composeBom = "2026.08.00"
 hiltNavigationCompose = "1.4.0"
 room = "2.8.4"
 lifecycleRuntimeKtx = "2.11.0"
-foundation = "1.13.0-alpha02"
 
 [libraries]
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -68,7 +67,6 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 #kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 
 [plugins]
