@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.PlayCircle
-import androidx.compose.material.icons.outlined.StopCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,11 +22,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import free.bigflowertiger.cocassistant.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.milliseconds
@@ -129,7 +128,10 @@ fun SpeedCalcScreen(
                 enabled = state.startEnabled,
                 onClick = { viewModel.onEvent(SpeedCalcEvent.StartTimer) }
             ) {
-                Icon(imageVector = Icons.Outlined.PlayCircle, contentDescription = "Start")
+                Icon(
+                    painter = painterResource(R.drawable.play_circle_24px),
+                    "Start"
+                )
             }
 
             IconButton(
@@ -143,7 +145,7 @@ fun SpeedCalcScreen(
                     }
                 }
             ) {
-                Icon(imageVector = state.pauseResumeIcon, contentDescription = "Pause/Resume")
+                Icon(painterResource(state.pauseResumeIcon), contentDescription = "Pause/Resume")
             }
 
             IconButton(
@@ -151,7 +153,10 @@ fun SpeedCalcScreen(
                 enabled = state.stopEnabled,
                 onClick = { viewModel.onEvent(SpeedCalcEvent.StopTimer) }
             ) {
-                Icon(imageVector = Icons.Outlined.StopCircle, contentDescription = "Stop")
+                Icon(
+                    painter = painterResource(R.drawable.stop_circle_24px),
+                    contentDescription = "Stop"
+                )
             }
         }
 

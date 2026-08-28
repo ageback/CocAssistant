@@ -1,8 +1,7 @@
 package free.bigflowertiger.cocassistant.ui.screen
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.PauseCircle
-import androidx.compose.material.icons.outlined.RestartAlt
+import free.bigflowertiger.cocassistant.R
+
 
 data class SpeedCalcState(
     val timerStatus: TimeStatus = TimeStatus.Stopped,
@@ -33,9 +32,9 @@ data class SpeedCalcState(
 
     val pauseResumeIcon
         get() = when (timerStatus) {
-            TimeStatus.Started -> Icons.Outlined.PauseCircle
-            TimeStatus.Paused -> Icons.Outlined.RestartAlt
-            TimeStatus.Resumed -> Icons.Outlined.PauseCircle
-            TimeStatus.Stopped -> Icons.Outlined.PauseCircle
+            TimeStatus.Started -> R.drawable.pause_circle_24px
+            TimeStatus.Paused -> R.drawable.resume_24px
+            TimeStatus.Resumed -> R.drawable.pause_circle_24px
+            TimeStatus.Stopped -> R.drawable.pause_circle_24px
         }
 }
