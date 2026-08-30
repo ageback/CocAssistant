@@ -56,13 +56,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 if (locationPermissionState.allPermissionsGranted) {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize()
-                    ) { paddingValues ->
-                        TimerScreen(modifier = Modifier
-                            .padding(paddingValues)
-                            .fillMaxWidth())
-                    }
+                    TimerScreen()
                 }
             }
         }

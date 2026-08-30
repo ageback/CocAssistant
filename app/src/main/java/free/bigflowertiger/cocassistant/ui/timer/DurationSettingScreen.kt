@@ -23,7 +23,8 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(ExperimentalGridApi::class)
 @Composable
 fun DurationSettingScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSave: (duration: Duration) -> Unit
 ) {
     var inputValue by remember { mutableLongStateOf(0L) }
     var duration: Duration by remember { mutableStateOf(0.seconds) }
@@ -85,7 +86,11 @@ fun DurationSettingScreen(
             }
         }
         Row {
-            Button(onClick = {}) {
+            Button(
+                onClick = {
+                    onSave(duration)
+                }
+            ) {
                 Text(text = "启动计时器")
             }
         }
