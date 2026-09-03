@@ -1,5 +1,5 @@
 [versions]
-agp = "9.3.2"
+agp = "9.4.0"
 workRuntimeKtx = "2.11.2"
 datastoreKtx = "1.0.0"
 ksp = "2.3.11"
