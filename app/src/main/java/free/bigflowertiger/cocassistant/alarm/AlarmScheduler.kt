@@ -31,8 +31,7 @@ class AlarmScheduler @Inject constructor(
         val pendingIntent = getTimerPendingIntent(timer.id)
         val triggerAt = timer.endTime
 
-        AlarmManagerCompat.setExactAndAllowWhileIdle(
-            alarmManager,
+        alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             triggerAt,
             pendingIntent
