@@ -43,14 +43,14 @@ fun TextCard(
     containerColor: Color = CardDefaults.cardColors().containerColor,
     contentColor: Color = CardDefaults.cardColors().contentColor,
     shape: Shape = CardDefaults.shape,
-    onClick: () -> Unit = {},
+    onClick: (String) -> Unit = {},
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
-            .clickable(interactionSource = interactionSource, onClick = onClick)
+            .clickable(interactionSource = interactionSource, onClick = { onClick(label) })
             .semantics {
                 role = Role.Button
             }
