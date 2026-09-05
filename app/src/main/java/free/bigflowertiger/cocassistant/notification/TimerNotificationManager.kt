@@ -36,6 +36,19 @@ class TimerNotificationManager @Inject constructor(
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun testNotificaiton() {
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notifications_active_24px)
+            .setContentTitle("测试通知")
+            .setContentText("倒计时结束")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(0, notification)
+    }
+
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showTimerFinished(timer: TimerEntity) {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.notifications_active_24px)

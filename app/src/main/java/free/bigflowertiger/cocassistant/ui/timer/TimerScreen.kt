@@ -1,7 +1,9 @@
 package free.bigflowertiger.cocassistant.ui.timer
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.provider.AlarmClock
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.padding
@@ -25,10 +27,13 @@ import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.data.room.entity.TimerStatus
+import kotlin.time.Duration
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
-fun TimerScreen() {
+fun TimerScreen(
+    onSave: (duration: Duration) -> Unit
+) {
     val context = LocalContext.current
     val (showTimerDialog, toggleTimerDialog) = remember { mutableStateOf(false) }
     val viewModel = hiltViewModel<TimerViewModel>()
@@ -74,7 +79,8 @@ fun TimerScreen() {
             dismissButton = {},
             text = {
                 DurationSettingScreen { duration ->
-                    viewModel.createTimer(duration = duration)
+//                    viewModel.createTimer(duration = duration)
+                    onSave(duration)
                     toggleTimerDialog(false)
                 }
             }
@@ -83,3 +89,4 @@ fun TimerScreen() {
 //        GridCards()
 
 }
+

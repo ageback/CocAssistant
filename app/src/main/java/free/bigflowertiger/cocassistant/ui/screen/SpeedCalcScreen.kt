@@ -44,6 +44,7 @@ fun SpeedCalcScreen(
     val ringtone = remember { RingtoneManager.getRingtone(context, ringtoneUri) }
 
     val state = viewModel.state.value
+    val duration = state.timeRemaining
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -126,7 +127,9 @@ fun SpeedCalcScreen(
             IconButton(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 enabled = state.startEnabled,
-                onClick = { viewModel.onEvent(SpeedCalcEvent.StartTimer) }
+                onClick = {
+                    viewModel.onEvent(SpeedCalcEvent.StartTimer)
+                }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.play_circle_24px),
@@ -175,3 +178,4 @@ fun SpeedCalcScreen(
         }
     }
 }
+

@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.AlarmManagerCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import free.bigflowertiger.cocassistant.data.room.entity.TimerEntity
@@ -31,10 +32,18 @@ class AlarmScheduler @Inject constructor(
         val pendingIntent = getTimerPendingIntent(timer.id)
         val triggerAt = timer.endTime
 
+        Log.d(
+            "NNN",
+            "schedule: id=${timer.id}, endTime=$triggerAt, now=${System.currentTimeMillis()}"
+        )
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             triggerAt,
             pendingIntent
+        )
+        Log.d(
+            "NNN",
+            "schedule 完成: id=${timer.id}"
         )
     }
 
@@ -46,13 +55,11 @@ class AlarmScheduler @Inject constructor(
     }
 
     private fun getTimerPendingIntent(timerId: String): PendingIntent {
-        val intent = Intent(
-            context,
-            TimerAlarmReceiver::class.java
-        ).apply {
-            action = ACTION_TIMER_ALARM
-            putExtra(EXTRA_TIMER_ID, timerId)
-        }
+        val intent = Intent(context, TimerAlarmReceiver::class.java)
+            .apply {
+                action = ACTION_TIMER_ALARM
+                putExtra(EXTRA_TIMER_ID, timerId)
+            }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             timerId.hashCode(),

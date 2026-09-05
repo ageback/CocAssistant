@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -28,7 +29,7 @@ fun DurationSettingScreen(
 ) {
     var inputValue by remember { mutableLongStateOf(0L) }
     var duration: Duration by remember { mutableStateOf(0.seconds) }
-
+    val context = LocalContext.current
 
     fun getDuration(): Duration {
         val hours = inputValue / 10_000
@@ -96,3 +97,4 @@ fun DurationSettingScreen(
         }
     }
 }
+

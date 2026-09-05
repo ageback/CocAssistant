@@ -6,24 +6,18 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
+import android.provider.AlarmClock
 import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
-import free.bigflowertiger.cocassistant.ui.screen.SpeedCalcScreen
 import free.bigflowertiger.cocassistant.ui.theme.CocAssistantTheme
 import free.bigflowertiger.cocassistant.ui.timer.TimerScreen
 
@@ -41,24 +35,51 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             CocAssistantTheme {
-                val locationPermissionState =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                    val notificationPermissionState =
                         rememberMultiplePermissionsState(
                             listOf(
                                 android.Manifest.permission.POST_NOTIFICATIONS
                             )
                         )
-                    } else {
-                        TODO("VERSION.SDK_INT < TIRAMISU")
-                    }
-                LaunchedEffect(Unit) {
-                    locationPermissionState.launchMultiplePermissionRequest()
-                }
 
-                if (locationPermissionState.allPermissionsGranted) {
-                    TimerScreen()
+                    LaunchedEffect(Unit) {
+                        notificationPermissionState.launchMultiplePermissionRequest()
+                    }
+
+                    if (notificationPermissionState.allPermissionsGranted) {
+//                        SpeedCalcScreen()
+                        TimerScreen {
+                            startOSTimer("TestAlarm", it.inWholeSeconds)
+                        }
+                    }
+
+                } else {
+                    // Android 12 及以下无需 POST_NOTIFICATIONS
+                    TimerScreen {
+                        startOSTimer("TestAlarm", it.inWholeSeconds)
+                    }
                 }
             }
+        }
+    }
+
+    fun startOSTimer(
+        alarmMessage: String,
+        durationSeconds: Long,
+        skipUi: Boolean = true
+    ) {
+        val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
+            // 这里必须是 Int 类型，不能用 Long. 否则调用失败。
+            putExtra(AlarmClock.EXTRA_LENGTH, durationSeconds.toInt())
+            putExtra(AlarmClock.EXTRA_MESSAGE, alarmMessage)
+            putExtra(AlarmClock.EXTRA_SKIP_UI, skipUi)
+        }
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
         }
     }
 
