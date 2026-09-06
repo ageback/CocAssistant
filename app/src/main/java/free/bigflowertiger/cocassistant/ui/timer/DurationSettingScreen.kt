@@ -9,25 +9,36 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
-import kotlin.time.Duration
+import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
 fun DurationSettingScreen(
     modifier: Modifier = Modifier,
-    onSave: (duration: Duration) -> Unit
+    onSave: (durationMillis: Long) -> Unit
 ) {
     val controller by remember { mutableStateOf(DurationInputController()) }
 
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    val options = listOf(
+        DurationMultiples("不加速", 1),
+        DurationMultiples("10倍加速", 10),
+        DurationMultiples("24倍加速", 24)
+    )
     Column(modifier = modifier) {
         Row(
             modifier = Modifier
@@ -43,12 +54,8 @@ fun DurationSettingScreen(
         }
         Grid(
             config = {
-                repeat(3) {
-                    column(0.33f)
-                }
-                repeat(6) {
-                    row(GridTrackSize.Auto)
-                }
+                repeat(3) { column(0.33f) }
+                repeat(10) { row(GridTrackSize.Auto) }
                 gap(8.dp)
             }
         ) {
@@ -63,15 +70,28 @@ fun DurationSettingScreen(
             TextCard(label = "0") { controller.appendDigit(it.toInt()) }
             PainterIconCard { controller.backspace() }
 
-            Button(onClick = {}) {
-                Text(text = "1分钟")
+            Button(onClick = {}) { Text(text = "1分钟") }
+            Button(onClick = {}) { Text(text = "10分钟") }
+            Button(onClick = {}) { Text(text = "30分钟") }
+
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gridItem(columnSpan = 3),
+            ) {
+                options.forEachIndexed { index, multiple ->
+                    SegmentedButton(
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = index,
+                            count = options.size
+                        ),
+                        onClick = { selectedIndex = index },
+                        selected = index == selectedIndex,
+                        label = { Text(multiple.title) }
+                    )
+                }
             }
-            Button(onClick = {}) {
-                Text(text = "10分钟")
-            }
-            Button(onClick = {}) {
-                Text(text = "30分钟")
-            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,7 +100,7 @@ fun DurationSettingScreen(
             ) {
                 Button(
                     onClick = {
-                        onSave(controller.duration)
+                        onSave(controller.duration.inWholeMilliseconds / options[selectedIndex].multiples)
                     }
                 ) {
                     Text(text = "启动计时器")

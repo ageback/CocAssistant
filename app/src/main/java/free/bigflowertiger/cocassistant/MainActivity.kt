@@ -52,14 +52,14 @@ class MainActivity : ComponentActivity() {
                     if (notificationPermissionState.allPermissionsGranted) {
 //                        SpeedCalcScreen()
                         TimerScreen {
-                            startOSTimer("TestAlarm", it.inWholeSeconds)
+                            startOSTimer("TestAlarm", it)
                         }
                     }
 
                 } else {
                     // Android 12 及以下无需 POST_NOTIFICATIONS
                     TimerScreen {
-                        startOSTimer("TestAlarm", it.inWholeSeconds)
+                        startOSTimer("TestAlarm", it)
                     }
                 }
             }

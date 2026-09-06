@@ -27,12 +27,11 @@ import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.data.room.entity.TimerStatus
-import kotlin.time.Duration
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
 fun TimerScreen(
-    onSave: (duration: Duration) -> Unit
+    onSave: (durationSeconds: Long) -> Unit
 ) {
     val context = LocalContext.current
     val (showTimerDialog, toggleTimerDialog) = remember { mutableStateOf(false) }
@@ -79,9 +78,9 @@ fun TimerScreen(
             confirmButton = {},
             dismissButton = {},
             text = {
-                DurationSettingScreen { duration ->
-                    viewModel.createTimer(duration = duration)
-                    onSave(duration)
+                DurationSettingScreen { durationMillis ->
+//                    viewModel.createTimer(durationMillis)
+                    onSave(durationMillis / 1000)
                     toggleTimerDialog(false)
                 }
             },

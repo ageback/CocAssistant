@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
@@ -25,8 +24,8 @@ class TimerViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun createTimer(duration: Duration, title: String = "计时器") = viewModelScope.launch {
-        repository.createTimer(title, duration.inWholeMilliseconds)
+    fun createTimer(durationMillis: Long, title: String = "计时器") = viewModelScope.launch {
+        repository.createTimer(title, durationMillis)
 
     }
 
