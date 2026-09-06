@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.AlarmClock
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.compose.foundation.layout.ExperimentalGridApi
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
@@ -74,6 +76,7 @@ fun TimerScreen(
 
     if (showTimerDialog) {
         AlertDialog(
+            modifier = Modifier.fillMaxWidth(),
             onDismissRequest = { toggleTimerDialog(false) },
             confirmButton = {},
             dismissButton = {},
@@ -83,7 +86,8 @@ fun TimerScreen(
                     onSave(duration)
                     toggleTimerDialog(false)
                 }
-            }
+            },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
         )
     }
 //        GridCards()
