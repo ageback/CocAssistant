@@ -3,6 +3,7 @@ package free.bigflowertiger.cocassistant
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
@@ -19,7 +20,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import free.bigflowertiger.cocassistant.ui.theme.CocAssistantTheme
-import free.bigflowertiger.cocassistant.ui.timer.TimerScreen
+import free.bigflowertiger.cocassistant.ui.timer.DurationSettingScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -50,16 +51,15 @@ class MainActivity : ComponentActivity() {
                     }
 
                     if (notificationPermissionState.allPermissionsGranted) {
-//                        SpeedCalcScreen()
-                        TimerScreen {
-                            startOSTimer("TestAlarm", it)
+                        DurationSettingScreen {
+                            startOSTimer("TestAlarm", it/1000)
                         }
                     }
 
                 } else {
                     // Android 12 及以下无需 POST_NOTIFICATIONS
-                    TimerScreen {
-                        startOSTimer("TestAlarm", it)
+                    DurationSettingScreen {
+                        startOSTimer("TestAlarm", it/1000)
                     }
                 }
             }
@@ -71,15 +71,32 @@ class MainActivity : ComponentActivity() {
         durationSeconds: Long,
         skipUi: Boolean = true
     ) {
+        val alarmApps = queryAlarmAppNames()
         val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
             // 这里必须是 Int 类型，不能用 Long. 否则调用失败。
             putExtra(AlarmClock.EXTRA_LENGTH, durationSeconds.toInt())
             putExtra(AlarmClock.EXTRA_MESSAGE, alarmMessage)
             putExtra(AlarmClock.EXTRA_SKIP_UI, skipUi)
+            if (alarmApps.isNotEmpty()) {
+                setPackage(alarmApps[0].second)
+            }
         }
-
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
+        }
+    }
+
+    fun queryAlarmAppNames(): List<Pair<String, String?>> {
+        val intent = Intent(AlarmClock.ACTION_SET_TIMER)
+        val apps = packageManager.queryIntentActivities(
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY
+        )
+        return apps.map {
+            val packageName = it.activityInfo.packageName
+            val appName = it.loadLabel(packageManager).toString()
+
+            appName to packageName
         }
     }
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -39,74 +40,76 @@ fun DurationSettingScreen(
         DurationMultiples("10倍加速", 10),
         DurationMultiples("24倍加速", 24)
     )
-    Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            DurationDisplay(
-                controller.hours,
-                controller.minutes,
-                controller.seconds
-            )
-        }
-        Grid(
-            config = {
-                repeat(3) { column(0.33f) }
-                repeat(10) { row(GridTrackSize.Auto) }
-                gap(8.dp)
-            }
-        ) {
-            repeat(9) { index ->
-                val number = index + 1
-                NumberCard(number = number) {
-                    controller.appendDigit(number)
-                }
-            }
-
-            TextCard(label = "00") { controller.appendDoubleZero() }
-            TextCard(label = "0") { controller.appendDigit(it.toInt()) }
-            PainterIconCard { controller.backspace() }
-
-            Button(onClick = {}) { Text(text = "1分钟") }
-            Button(onClick = {}) { Text(text = "10分钟") }
-            Button(onClick = {}) { Text(text = "30分钟") }
-
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .gridItem(columnSpan = 3),
-            ) {
-                options.forEachIndexed { index, multiple ->
-                    SegmentedButton(
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = options.size
-                        ),
-                        onClick = { selectedIndex = index },
-                        selected = index == selectedIndex,
-                        label = { Text(multiple.title) }
-                    )
-                }
-            }
-
+    Scaffold { innerPadding ->
+        Column(modifier = modifier.padding(innerPadding)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .gridItem(columnSpan = 3),
+                    .padding(bottom = 24.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(
-                    onClick = {
-                        onSave(controller.duration.inWholeMilliseconds / options[selectedIndex].multiples)
+                DurationDisplay(
+                    controller.hours,
+                    controller.minutes,
+                    controller.seconds
+                )
+            }
+            Grid(
+                config = {
+                    repeat(3) { column(0.33f) }
+                    repeat(10) { row(GridTrackSize.Auto) }
+                    gap(8.dp)
+                }
+            ) {
+                repeat(9) { index ->
+                    val number = index + 1
+                    NumberCard(number = number) {
+                        controller.appendDigit(number)
                     }
+                }
+
+                TextCard(label = "00") { controller.appendDoubleZero() }
+                TextCard(label = "0") { controller.appendDigit(it.toInt()) }
+                PainterIconCard { controller.backspace() }
+
+                Button(onClick = {}) { Text(text = "1分钟") }
+                Button(onClick = {}) { Text(text = "10分钟") }
+                Button(onClick = {}) { Text(text = "30分钟") }
+
+                SingleChoiceSegmentedButtonRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .gridItem(columnSpan = 3),
                 ) {
-                    Text(text = "启动计时器")
+                    options.forEachIndexed { index, multiple ->
+                        SegmentedButton(
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = options.size
+                            ),
+                            onClick = { selectedIndex = index },
+                            selected = index == selectedIndex,
+                            label = { Text(multiple.title) }
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .gridItem(columnSpan = 3),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = {
+                            onSave(controller.duration.inWholeMilliseconds / options[selectedIndex].multiples)
+                        }
+                    ) {
+                        Text(text = "启动计时器")
+                    }
                 }
             }
         }
     }
-}
 
+}
