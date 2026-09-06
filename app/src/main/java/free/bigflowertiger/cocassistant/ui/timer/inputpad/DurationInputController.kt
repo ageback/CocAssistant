@@ -32,10 +32,9 @@ class DurationInputController(
     val duration: Duration
         get() = hours.hours + minutes.minutes + seconds.seconds
 
-    val isZero: Boolean
-        get() = digits == 0L
+    val isZero: Boolean get() = digits == 0L
 
-    val displayText: String get() = "$hours 小时 $minutes 分钟 $seconds 秒"
+    val displayText: String get() = "%02d小时%02d分%02d秒".format(hours, minutes, seconds)
 
     fun appendDigit(digit: Int) {
         require(digit in 0..9)
