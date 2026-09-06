@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import kotlin.time.Duration
 
@@ -35,9 +35,10 @@ fun DurationSettingScreen(
                 .padding(bottom = 24.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = controller.displayText,
-                style = MaterialTheme.typography.headlineLarge
+            DurationDisplay(
+                controller.hours,
+                controller.minutes,
+                controller.seconds
             )
         }
         Grid(
@@ -60,9 +61,7 @@ fun DurationSettingScreen(
 
             TextCard(label = "00") { controller.appendDoubleZero() }
             TextCard(label = "0") { controller.appendDigit(it.toInt()) }
-            TextCard(label = "X") {
-                controller.backspace()
-            }
+            PainterIconCard { controller.backspace() }
 
             Button(onClick = {}) {
                 Text(text = "1分钟")

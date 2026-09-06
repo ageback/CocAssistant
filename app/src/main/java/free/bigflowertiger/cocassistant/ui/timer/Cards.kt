@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import free.bigflowertiger.cocassistant.R
 
 @Composable
 fun NumberCard(
@@ -35,7 +38,29 @@ fun NumberCard(
         number.toString(),
         onClick = { onClick(number) }
     )
+}
 
+@Composable
+fun PainterIconCard(
+    modifier: Modifier = Modifier,
+    containerColor: Color = CardDefaults.cardColors().containerColor,
+    contentColor: Color = CardDefaults.cardColors().contentColor,
+    shape: Shape = CardDefaults.shape,
+    onClick: (String) -> Unit = {},
+) {
+    ClickableCard(
+        label = "",
+        modifier = modifier,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+        onClick = onClick
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.backspace_24px),
+            contentDescription = "回退"
+        )
+    }
 }
 
 @Composable
@@ -46,6 +71,34 @@ fun TextCard(
     contentColor: Color = CardDefaults.cardColors().contentColor,
     shape: Shape = CardDefaults.shape,
     onClick: (String) -> Unit = {},
+) {
+    ClickableCard(
+        label = label,
+        modifier = modifier,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        shape = shape,
+        onClick = onClick
+    ) {
+        Text(
+            label,
+            color = contentColor,
+            modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun ClickableCard(
+    label: String,
+    modifier: Modifier = Modifier,
+    containerColor: Color = CardDefaults.cardColors().containerColor,
+    contentColor: Color = CardDefaults.cardColors().contentColor,
+    shape: Shape = CardDefaults.shape,
+    onClick: (String) -> Unit = {},
+    content: @Composable () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Box(
@@ -59,12 +112,6 @@ fun TextCard(
             .clip(shape)
             .background(containerColor)
     ) {
-        Text(
-            label,
-            color = contentColor,
-            modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
+        content()
     }
 }
