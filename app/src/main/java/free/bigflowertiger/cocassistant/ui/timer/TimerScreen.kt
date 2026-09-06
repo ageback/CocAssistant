@@ -1,9 +1,7 @@
 package free.bigflowertiger.cocassistant.ui.timer
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.provider.AlarmClock
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -82,7 +80,7 @@ fun TimerScreen(
             dismissButton = {},
             text = {
                 DurationSettingScreen { duration ->
-//                    viewModel.createTimer(duration = duration)
+                    viewModel.createTimer(duration = duration)
                     onSave(duration)
                     toggleTimerDialog(false)
                 }
@@ -90,7 +88,5 @@ fun TimerScreen(
             properties = DialogProperties(usePlatformDefaultWidth = false)
         )
     }
-//        GridCards()
-
 }
 
