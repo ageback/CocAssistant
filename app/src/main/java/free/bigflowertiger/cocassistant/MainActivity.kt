@@ -37,9 +37,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             CocAssistantTheme {
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-
                     val notificationPermissionState =
                         rememberMultiplePermissionsState(
                             listOf(
@@ -60,7 +58,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-
                 } else {
                     // Android 12 及以下无需 POST_NOTIFICATIONS
                     DurationSettingScreen { data, app ->

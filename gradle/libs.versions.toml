@@ -4,10 +4,9 @@ workRuntimeKtx = "2.11.2"
 datastoreKtx = "1.0.0"
 ksp = "2.3.11"
 converterGson = "3.0.0"
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 coreKtx = "1.19.0"
 junit = "4.13.2"
-espressoCore = "3.7.0"
 accompanistPermissions = "0.37.3"
 appcompat = "1.8.0"
 googleMaterial = "1.14.0"
@@ -21,7 +20,6 @@ moshi = "1.15.2"
 xxpermissionsVersion = "28.3"
 composeBom = "2026.08.00"
 hiltNavigationCompose = "1.4.0"
-room = "2.8.4"
 lifecycleRuntimeKtx = "2.11.0"
 
 [libraries]
@@ -41,7 +39,6 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 datastore-ktx = { module = "com.github.DylanCaiCoding.DataStoreKTX:datastore-ktx", version.ref = "datastoreKtx" }
 getactivity-xxpermissions = { module = "com.github.getActivity:XXPermissions", version.ref = "xxpermissionsVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
@@ -63,11 +60,7 @@ androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 
 # room sqlite
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-#kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -77,17 +77,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-//    implementation(libs.androidx.material.icons.extended)
 
-    // room
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.ui.tooling)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+//    androidTestImplementation(libs.androidx.espresso.core)
 
 
     implementation(libs.converter.gson)
