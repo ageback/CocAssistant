@@ -41,7 +41,11 @@ fun DurationSettingScreen(
         DurationMultiples("24倍加速", 24)
     )
     Scaffold { innerPadding ->
-        Column(modifier = modifier.padding(innerPadding)) {
+        Column(
+            modifier = modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
