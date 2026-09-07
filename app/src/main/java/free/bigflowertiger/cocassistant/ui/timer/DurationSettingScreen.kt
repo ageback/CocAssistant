@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -30,7 +31,8 @@ import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
 @Composable
 fun DurationSettingScreen(
     modifier: Modifier = Modifier,
-    onSave: (durationMillis: Long) -> Unit
+//    onSave: (durationMillis: Long) -> Unit
+    onSave: (timerData: TimerData) -> Unit
 ) {
     val controller by remember { mutableStateOf(DurationInputController()) }
 
@@ -40,6 +42,9 @@ fun DurationSettingScreen(
         DurationMultiples("10倍加速", 10),
         DurationMultiples("24倍加速", 24)
     )
+
+    var nameValue by remember { mutableStateOf("") }
+
     Scaffold { innerPadding ->
         Column(
             modifier = modifier
@@ -61,7 +66,7 @@ fun DurationSettingScreen(
             Grid(
                 config = {
                     repeat(3) { column(0.33f) }
-                    repeat(10) { row(GridTrackSize.Auto) }
+                    repeat(11) { row(GridTrackSize.Auto) }
                     gap(8.dp)
                 }
             ) {
@@ -97,20 +102,33 @@ fun DurationSettingScreen(
                         )
                     }
                 }
-
-                Row(
+                OutlinedTextField(
+                    value = nameValue,
+                    onValueChange = {
+                        nameValue = it
+                    },
+                    placeholder = {
+                        Text(text = "计时器名称")
+                    },
+                    modifier = Modifier
+                        .gridItem(columnSpan = 3)
+                        .fillMaxWidth(),
+                )
+                Button(
                     modifier = Modifier
                         .fillMaxWidth()
                         .gridItem(columnSpan = 3),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        onClick = {
-                            onSave(controller.duration.inWholeMilliseconds / options[selectedIndex].multiples)
-                        }
-                    ) {
-                        Text(text = "启动计时器")
+                    onClick = {
+//                        onSave(controller.duration.inWholeMilliseconds / options[selectedIndex].multiples)
+                        onSave(
+                            TimerData(
+                                nameValue,
+                                controller.duration.inWholeMilliseconds / options[selectedIndex].multiples
+                            )
+                        )
                     }
+                ) {
+                    Text(text = "启动计时器")
                 }
             }
         }

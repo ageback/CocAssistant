@@ -80,7 +80,7 @@ fun TimerScreen(
             text = {
                 DurationSettingScreen { durationMillis ->
 //                    viewModel.createTimer(durationMillis)
-                    onSave(durationMillis / 1000)
+//                    onSave(durationMillis / 1000)
                     toggleTimerDialog(false)
                 }
             },
@@ -88,4 +88,3 @@ fun TimerScreen(
         )
     }
 }
-

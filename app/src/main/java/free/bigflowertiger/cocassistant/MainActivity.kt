@@ -51,15 +51,21 @@ class MainActivity : ComponentActivity() {
                     }
 
                     if (notificationPermissionState.allPermissionsGranted) {
-                        DurationSettingScreen {
-                            startOSTimer("TestAlarm", it/1000)
+                        DurationSettingScreen { data ->
+                            startOSTimer(
+                                data.timerNamer,
+                                data.durationSeconds
+                            )
                         }
                     }
 
                 } else {
                     // Android 12 及以下无需 POST_NOTIFICATIONS
-                    DurationSettingScreen {
-                        startOSTimer("TestAlarm", it/1000)
+                    DurationSettingScreen { data ->
+                        startOSTimer(
+                            data.timerNamer,
+                            data.durationSeconds
+                        )
                     }
                 }
             }
