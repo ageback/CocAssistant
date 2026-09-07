@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.GridTrackSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -22,7 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
@@ -33,13 +38,13 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun DurationSettingScreen(
     modifier: Modifier = Modifier,
-    onSave: (timerData: TimerData) -> Unit
+    onSave: (timerData: TimerData, app: AlarmAppInfo?) -> Unit
 ) {
     val controller by remember { mutableStateOf(DurationInputController()) }
 
     var selectedMultipleIndex by remember { mutableIntStateOf(0) }
     var selectedPresetIndex by remember { mutableIntStateOf(0) }
-    val options = listOf(
+    val multiples = listOf(
         DurationMultiples("常规", "不加速", 1),
         DurationMultiples("建筑工人10倍速", "10倍加速", 10),
         DurationMultiples("实验室24倍速", "24倍加速", 24)
@@ -51,9 +56,27 @@ fun DurationSettingScreen(
         TimerPreset("30分钟", 60 * 30)
     )
 
-    var nameValue by remember { mutableStateOf("") }
+    var selectedApp: AlarmAppInfo? by remember { mutableStateOf(null) }
 
-    Scaffold { innerPadding ->
+    // 定时器名称
+    var timerTitle by remember { mutableStateOf("") }
+
+    val (showAppListDialog, toggleAppListDialog) = remember { mutableStateOf(false) }
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    toggleAppListDialog(true)
+                }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_stat_timer),
+                    contentDescription = "选择闹钟程序"
+                )
+            }
+        }
+    ) { innerPadding ->
         Column(
             modifier = modifier
                 .padding(innerPadding)
@@ -119,15 +142,15 @@ fun DurationSettingScreen(
                         .fillMaxWidth()
                         .gridItem(columnSpan = 3),
                 ) {
-                    options.forEachIndexed { index, multiple ->
+                    multiples.forEachIndexed { index, multiple ->
                         SegmentedButton(
                             shape = SegmentedButtonDefaults.itemShape(
                                 index = index,
-                                count = options.size
+                                count = multiples.size
                             ),
                             onClick = {
                                 selectedMultipleIndex = index
-                                nameValue = options[index].title
+                                timerTitle = multiples[index].title
                             },
                             selected = index == selectedMultipleIndex,
                             label = { Text(multiple.label) }
@@ -135,9 +158,9 @@ fun DurationSettingScreen(
                     }
                 }
                 OutlinedTextField(
-                    value = nameValue,
+                    value = timerTitle,
                     onValueChange = {
-                        nameValue = it
+                        timerTitle = it
                     },
                     placeholder = {
                         Text(text = "计时器名称")
@@ -153,10 +176,10 @@ fun DurationSettingScreen(
                     onClick = {
                         onSave(
                             TimerData(
-                                nameValue,
-                                controller.duration.inWholeMilliseconds /
-                                        options[selectedMultipleIndex].multiples
-                            )
+                                timerTitle,
+                                controller.getDurationByMultiple(multiples[selectedMultipleIndex].multiples)
+                            ),
+                            selectedApp
                         )
                     }
                 ) {
@@ -164,7 +187,27 @@ fun DurationSettingScreen(
                 }
             }
 
-            AlarmAppList("")
+            selectedApp?.let {
+                AlarmAppItem(it, true)
+            }
+        }
+
+
+        if (showAppListDialog) {
+            AlertDialog(
+                onDismissRequest = { toggleAppListDialog(false) },
+                text = {
+
+                    AlarmAppList(
+                        selectedPackageName = "",
+                        onAppSelected = {
+                            toggleAppListDialog(false)
+                            selectedApp = it
+                        }
+                    )
+                },
+                confirmButton = {}
+            )
         }
     }
 

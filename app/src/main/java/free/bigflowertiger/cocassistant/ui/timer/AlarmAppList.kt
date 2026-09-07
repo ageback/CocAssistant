@@ -51,44 +51,51 @@ fun AlarmAppList(
             items = apps,
             key = { it.packageName }
         ) { app ->
-
             val selected = app.packageName == selectedPackageName
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onAppSelected(app)
-                    }
-                    .padding(
-                        horizontal = 16.dp,
-                        vertical = 12.dp
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    bitmap = app.icon
-                        .toBitmap()
-                        .asImageBitmap(),
-                    contentDescription = app.name,
-                    modifier = Modifier.size(48.dp)
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Text(
-                    text = app.name,
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-
-                RadioButton(
-                    selected = selected,
-                    onClick = {
-                        onAppSelected(app)
-                    }
-                )
-            }
+            AlarmAppItem(app, selected) { onAppSelected(it) }
         }
+    }
+}
+
+@Composable
+fun AlarmAppItem(
+    app: AlarmAppInfo,
+    selected: Boolean,
+    onAppSelected: (AlarmAppInfo) -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onAppSelected(app)
+            }
+            .padding(
+                horizontal = 16.dp,
+                vertical = 12.dp
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            bitmap = app.icon
+                .toBitmap()
+                .asImageBitmap(),
+            contentDescription = app.name,
+            modifier = Modifier.size(48.dp)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(
+            text = app.name,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        RadioButton(
+            selected = selected,
+            onClick = {
+                onAppSelected(app)
+            }
+        )
     }
 }

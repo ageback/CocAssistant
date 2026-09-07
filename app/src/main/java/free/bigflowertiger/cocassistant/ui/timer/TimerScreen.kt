@@ -78,11 +78,11 @@ fun TimerScreen(
             confirmButton = {},
             dismissButton = {},
             text = {
-                DurationSettingScreen { durationMillis ->
+//                DurationSettingScreen { durationMillis ->
 //                    viewModel.createTimer(durationMillis)
 //                    onSave(durationMillis / 1000)
-                    toggleTimerDialog(false)
-                }
+//                    toggleTimerDialog(false)
+//                }
             },
             properties = DialogProperties(usePlatformDefaultWidth = false)
         )

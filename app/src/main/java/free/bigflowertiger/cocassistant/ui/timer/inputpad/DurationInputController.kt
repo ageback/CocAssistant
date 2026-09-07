@@ -87,4 +87,6 @@ class DurationInputController(
 
         return h * 10_000 + m * 100 + s
     }
+
+    fun getDurationByMultiple(multiple: Int): Long = duration.inWholeMilliseconds / multiple
 }

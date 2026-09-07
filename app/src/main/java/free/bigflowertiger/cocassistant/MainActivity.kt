@@ -20,6 +20,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import free.bigflowertiger.cocassistant.ui.theme.CocAssistantTheme
+import free.bigflowertiger.cocassistant.ui.timer.AlarmAppInfo
 import free.bigflowertiger.cocassistant.ui.timer.DurationSettingScreen
 
 @AndroidEntryPoint
@@ -51,20 +52,22 @@ class MainActivity : ComponentActivity() {
                     }
 
                     if (notificationPermissionState.allPermissionsGranted) {
-                        DurationSettingScreen { data ->
+                        DurationSettingScreen { data, app ->
                             startOSTimer(
                                 data.timerNamer,
-                                data.durationSeconds
+                                data.durationSeconds,
+                                app
                             )
                         }
                     }
 
                 } else {
                     // Android 12 及以下无需 POST_NOTIFICATIONS
-                    DurationSettingScreen { data ->
+                    DurationSettingScreen { data, app ->
                         startOSTimer(
                             data.timerNamer,
-                            data.durationSeconds
+                            data.durationSeconds,
+                            app
                         )
                     }
                 }
@@ -75,6 +78,7 @@ class MainActivity : ComponentActivity() {
     fun startOSTimer(
         alarmMessage: String,
         durationSeconds: Long,
+        app: AlarmAppInfo?,
         skipUi: Boolean = true
     ) {
         val alarmApps = queryAlarmAppNames()
@@ -83,8 +87,8 @@ class MainActivity : ComponentActivity() {
             putExtra(AlarmClock.EXTRA_LENGTH, durationSeconds.toInt())
             putExtra(AlarmClock.EXTRA_MESSAGE, alarmMessage)
             putExtra(AlarmClock.EXTRA_SKIP_UI, skipUi)
-            if (alarmApps.isNotEmpty()) {
-                setPackage(alarmApps[0].second)
+            app?.let {
+                setPackage(it.packageName)
             }
         }
         if (intent.resolveActivity(packageManager) != null) {
