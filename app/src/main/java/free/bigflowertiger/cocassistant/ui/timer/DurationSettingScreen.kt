@@ -59,7 +59,7 @@ fun DurationSettingScreen(
     var selectedApp: AlarmAppInfo? by remember { mutableStateOf(null) }
 
     // 定时器名称
-    var timerTitle by remember { mutableStateOf("") }
+    var timerTitle by remember { mutableStateOf("COC计时器") }
 
     val (showAppListDialog, toggleAppListDialog) = remember { mutableStateOf(false) }
 
