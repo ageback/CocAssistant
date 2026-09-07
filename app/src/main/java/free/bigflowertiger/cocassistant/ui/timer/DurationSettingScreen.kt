@@ -27,6 +27,7 @@ import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.TimerPreset
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
@@ -101,7 +102,11 @@ fun DurationSettingScreen(
                                 index = index,
                                 count = presets.size
                             ),
-                            onClick = { selectedPresetIndex = index },
+                            onClick = {
+                                selectedPresetIndex = index
+                                controller.setDuration(timer.durationSeconds.seconds)
+                            },
+
                             selected = index == selectedPresetIndex,
                             label = { Text(timer.title) }
                         )
