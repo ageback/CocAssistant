@@ -163,6 +163,8 @@ fun DurationSettingScreen(
                     Text(text = "启动计时器")
                 }
             }
+
+            AlarmAppList("")
         }
     }
 
