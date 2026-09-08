@@ -27,13 +27,14 @@ class TimerSettingViewModel @Inject constructor(
         effect {
             val selectedAppId = DatastoreRepository.selectedAlarmAppId.get()
             val appList = queryAlarmApps()
-            selectedAppId?.let { appId ->
-                _state.update { stt ->
-                    stt.copy(
-                        selectedAppInfo = appList.find { app -> app.packageName == appId },
-                        alarmApps = appList
-                    )
-                }
+            val selectedApp = selectedAppId?.let {
+                appList.find { app -> app.packageName == it }
+            }
+            _state.update { stt ->
+                stt.copy(
+                    selectedAppInfo = selectedApp,
+                    alarmApps = appList
+                )
             }
         }
     }
