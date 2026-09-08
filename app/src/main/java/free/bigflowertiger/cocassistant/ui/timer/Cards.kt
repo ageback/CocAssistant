@@ -5,6 +5,7 @@ package free.bigflowertiger.cocassistant.ui.timer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalGridApi
@@ -46,7 +47,8 @@ fun PainterIconCard(
     containerColor: Color = CardDefaults.cardColors().containerColor,
     contentColor: Color = CardDefaults.cardColors().contentColor,
     shape: Shape = CardDefaults.shape,
-    onClick: (String) -> Unit = {},
+    onLongClick: () -> Unit = {},
+    onClick: (String) -> Unit = {}
 ) {
     ClickableCard(
         label = "",
@@ -54,7 +56,8 @@ fun PainterIconCard(
         containerColor = containerColor,
         contentColor = contentColor,
         shape = shape,
-        onClick = onClick
+        onClick = onClick,
+        onLongClick = onLongClick
     ) {
         Icon(
             painter = painterResource(R.drawable.backspace_24px),
@@ -98,6 +101,7 @@ fun ClickableCard(
     contentColor: Color = CardDefaults.cardColors().contentColor,
     shape: Shape = CardDefaults.shape,
     onClick: (String) -> Unit = {},
+    onLongClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -105,7 +109,11 @@ fun ClickableCard(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
-            .clickable(interactionSource = interactionSource, onClick = { onClick(label) })
+            .combinedClickable(
+                interactionSource = interactionSource,
+                onClick = { onClick(label) },
+                onLongClick = onLongClick
+            )
             .semantics {
                 role = Role.Button
             }

@@ -171,7 +171,9 @@ fun DurationSettingScreen(
 
                 TextCard(label = "00") { controller.appendDoubleZero() }
                 TextCard(label = "0") { controller.appendDigit(it.toInt()) }
-                PainterIconCard { controller.backspace() }
+                PainterIconCard(onLongClick = {
+                    controller.clear()
+                }) { controller.backspace() }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
