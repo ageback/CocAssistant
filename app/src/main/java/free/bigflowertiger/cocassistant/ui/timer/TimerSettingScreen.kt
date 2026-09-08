@@ -202,6 +202,7 @@ fun DurationSettingScreen(
                 text = {
                     AlarmAppList(
                         selectedPackageName = "",
+                        apps = state.alarmApps,
                         onAppSelected = {
                             toggleAppListDialog(false)
                             viewModel.onEvent(TimerSettingEvent.ChangeSelectedApp(it))

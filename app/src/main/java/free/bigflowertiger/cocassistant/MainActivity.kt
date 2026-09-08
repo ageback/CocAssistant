@@ -32,9 +32,9 @@ class MainActivity : ComponentActivity() {
 //        WindowCompat.setDecorFitsSystemWindows(window,false)
 
         super.onCreate(savedInstanceState)
-        if (!isIgnoringBatteryOptimizations(this)) {
-            requestIgnoreBatteryOptimizations(this)
-        }
+//        if (!isIgnoringBatteryOptimizations(this)) {
+//            requestIgnoreBatteryOptimizations(this)
+//        }
         setContent {
             CocAssistantTheme {
                 DurationSettingScreen { data, app ->
@@ -54,7 +54,6 @@ class MainActivity : ComponentActivity() {
         app: AlarmAppInfo?,
         skipUi: Boolean = true
     ) {
-        val alarmApps = queryAlarmAppNames()
         val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
             // 这里必须是 Int 类型，不能用 Long. 否则调用失败。
             putExtra(AlarmClock.EXTRA_LENGTH, durationSeconds.toInt())
@@ -69,19 +68,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun queryAlarmAppNames(): List<Pair<String, String?>> {
-        val intent = Intent(AlarmClock.ACTION_SET_TIMER)
-        val apps = packageManager.queryIntentActivities(
-            intent,
-            PackageManager.MATCH_DEFAULT_ONLY
-        )
-        return apps.map {
-            val packageName = it.activityInfo.packageName
-            val appName = it.loadLabel(packageManager).toString()
-
-            appName to packageName
-        }
-    }
 
     @SuppressLint("BatteryLife")
     fun requestIgnoreBatteryOptimizations(context: Context) {

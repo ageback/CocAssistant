@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.find
 
 @HiltViewModel
 class TimerSettingViewModel @Inject constructor(
@@ -25,9 +26,13 @@ class TimerSettingViewModel @Inject constructor(
     init {
         effect {
             val selectedAppId = DatastoreRepository.selectedAlarmAppId.get()
+            val appList = queryAlarmApps()
             selectedAppId?.let { appId ->
                 _state.update { stt ->
-                    stt.copy(selectedAppInfo = queryAlarmApps().find { app -> app.packageName == appId })
+                    stt.copy(
+                        selectedAppInfo = appList.find { app -> app.packageName == appId },
+                        alarmApps = appList
+                    )
                 }
             }
         }
