@@ -37,36 +37,12 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             CocAssistantTheme {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    val notificationPermissionState =
-                        rememberMultiplePermissionsState(
-                            listOf(
-                                android.Manifest.permission.POST_NOTIFICATIONS
-                            )
-                        )
-
-                    LaunchedEffect(Unit) {
-                        notificationPermissionState.launchMultiplePermissionRequest()
-                    }
-
-                    if (notificationPermissionState.allPermissionsGranted) {
-                        DurationSettingScreen { data, app ->
-                            startOSTimer(
-                                data.timerNamer,
-                                data.durationSeconds,
-                                app
-                            )
-                        }
-                    }
-                } else {
-                    // Android 12 及以下无需 POST_NOTIFICATIONS
-                    DurationSettingScreen { data, app ->
-                        startOSTimer(
-                            data.timerNamer,
-                            data.durationSeconds,
-                            app
-                        )
-                    }
+                DurationSettingScreen { data, app ->
+                    startOSTimer(
+                        data.timerNamer,
+                        data.durationSeconds,
+                        app
+                    )
                 }
             }
         }
