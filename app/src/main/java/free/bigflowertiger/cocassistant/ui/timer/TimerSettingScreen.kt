@@ -27,12 +27,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.TimerPreset
 import kotlin.time.Duration.Companion.seconds
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
@@ -40,6 +42,8 @@ fun DurationSettingScreen(
     modifier: Modifier = Modifier,
     onSave: (timerData: TimerData, app: AlarmAppInfo?) -> Unit
 ) {
+    val viewModel = hiltViewModel<TimerSettingViewModel>()
+    val state by viewModel.state.collectAsState()
     val controller by remember { mutableStateOf(DurationInputController()) }
 
     var selectedMultipleIndex by remember { mutableIntStateOf(0) }
@@ -56,7 +60,6 @@ fun DurationSettingScreen(
         TimerPreset("30分钟", 60 * 30)
     )
 
-    var selectedApp: AlarmAppInfo? by remember { mutableStateOf(null) }
 
     // 定时器名称
     var timerTitle by remember { mutableStateOf("COC计时器") }
@@ -179,7 +182,7 @@ fun DurationSettingScreen(
                                 timerTitle,
                                 controller.getDurationByMultiple(multiples[selectedMultipleIndex].multiples)
                             ),
-                            selectedApp
+                            state.selectedAppInfo
                         )
                     }
                 ) {
@@ -187,7 +190,7 @@ fun DurationSettingScreen(
                 }
             }
 
-            selectedApp?.let {
+            state.selectedAppInfo?.let {
                 AlarmAppItem(it, true)
             }
         }
@@ -197,12 +200,11 @@ fun DurationSettingScreen(
             AlertDialog(
                 onDismissRequest = { toggleAppListDialog(false) },
                 text = {
-
                     AlarmAppList(
                         selectedPackageName = "",
                         onAppSelected = {
                             toggleAppListDialog(false)
-                            selectedApp = it
+                            viewModel.onEvent(TimerSettingEvent.ChangeSelectedApp(it))
                         }
                     )
                 },
