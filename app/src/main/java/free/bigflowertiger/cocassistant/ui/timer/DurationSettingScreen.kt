@@ -101,16 +101,6 @@ fun DurationSettingScreen(
                     gap(8.dp)
                 }
             ) {
-                repeat(9) { index ->
-                    val number = index + 1
-                    NumberCard(number = number) {
-                        controller.appendDigit(number)
-                    }
-                }
-
-                TextCard(label = "00") { controller.appendDoubleZero() }
-                TextCard(label = "0") { controller.appendDigit(it.toInt()) }
-                PainterIconCard { controller.backspace() }
 
 
                 // 预设计时器
@@ -169,6 +159,16 @@ fun DurationSettingScreen(
                         .gridItem(columnSpan = 3)
                         .fillMaxWidth(),
                 )
+                repeat(9) { index ->
+                    val number = index + 1
+                    NumberCard(number = number) {
+                        controller.appendDigit(number)
+                    }
+                }
+
+                TextCard(label = "00") { controller.appendDoubleZero() }
+                TextCard(label = "0") { controller.appendDigit(it.toInt()) }
+                PainterIconCard { controller.backspace() }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
