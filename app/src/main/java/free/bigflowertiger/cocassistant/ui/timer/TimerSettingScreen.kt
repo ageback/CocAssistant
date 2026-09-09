@@ -85,18 +85,16 @@ fun DurationSettingScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                DurationDisplay(
-                    controller.hours,
-                    controller.minutes,
-                    controller.seconds
-                )
-            }
+            DurationDisplay(
+                controller.hours,
+                controller.minutes,
+                controller.seconds
+            )
+            DurationDisplay(
+                controller.speedupHours,
+                controller.speedupMinutes,
+                controller.speedupSeconds
+            )
             Grid(
                 config = {
                     repeat(3) { column(0.33f) }
@@ -104,8 +102,6 @@ fun DurationSettingScreen(
                     gap(8.dp)
                 }
             ) {
-
-
                 // 预设计时器
                 SingleChoiceSegmentedButtonRow(
                     modifier = Modifier
@@ -144,6 +140,7 @@ fun DurationSettingScreen(
                             onClick = {
                                 selectedMultipleIndex = index
                                 timerTitle = multiples[index].title
+                                controller.changeMultiples(multiples[index].multiples)
                             },
                             selected = index == selectedMultipleIndex,
                             label = { Text(multiple.label) }

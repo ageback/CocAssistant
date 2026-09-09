@@ -2,6 +2,7 @@ package free.bigflowertiger.cocassistant.ui.timer.inputpad
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.setValue
 import kotlin.time.Duration
@@ -17,6 +18,7 @@ class DurationInputController(
     private var digits by mutableLongStateOf(
         durationToDigits(initialDuration)
     )
+    private var multiples by mutableIntStateOf(1)
 
     val hours: Int
         get() = (digits / 10_000).toInt()
@@ -26,6 +28,17 @@ class DurationInputController(
 
     val seconds: Int
         get() = (digits % 100).toInt()
+
+
+    private val speedupDigits get() = digits / multiples
+    val speedupHours: Int
+        get() = (speedupDigits / 10_000).toInt()
+
+    val speedupMinutes: Int
+        get() = ((speedupDigits / 100) % 100).toInt()
+
+    val speedupSeconds: Int
+        get() = (speedupDigits % 100).toInt()
 
     val duration: Duration
         get() = hours.hours + minutes.minutes + seconds.seconds
@@ -42,6 +55,10 @@ class DurationInputController(
         if (newValue <= 999999 && isValid(newValue)) {
             digits = newValue
         }
+    }
+
+    fun changeMultiples(multiples: Int) {
+        this.multiples = multiples
     }
 
     fun appendDoubleZero() {
