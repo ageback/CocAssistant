@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,35 +17,44 @@ import androidx.compose.ui.unit.sp
 fun DurationDisplay(
     hours: Int,
     minutes: Int,
-    seconds: Int
+    seconds: Int,
+    color: Color = Color.Unspecified
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Bottom
     ) {
-        DurationNumber(hours)
-        DurationUnit("小时")
+        DurationNumber(hours, color)
 
-        DurationNumber(minutes)
-        DurationUnit("分钟")
+        DurationUnit("小时", color)
 
-        DurationNumber(seconds)
-        DurationUnit("秒")
+        DurationNumber(minutes, color)
+        DurationUnit("分钟", color)
+
+        DurationNumber(seconds, color)
+        DurationUnit("秒", color)
     }
 }
 
 @Composable
-private fun DurationNumber(value: Int) {
+private fun DurationNumber(
+    value: Int,
+    color: Color = Color.Unspecified
+) {
     Text(
         text = "%02d".format(value),
         fontSize = 48.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = color
     )
 }
 
 @Composable
-private fun DurationUnit(text: String) {
+private fun DurationUnit(
+    text: String,
+    color: Color = Color.Unspecified
+) {
     Text(
         text = text,
         fontSize = 24.sp,
@@ -53,6 +63,7 @@ private fun DurationUnit(text: String) {
             start = 3.dp,
             end = 8.dp,
             bottom = 5.dp
-        )
+        ),
+        color = color
     )
 }
