@@ -79,6 +79,9 @@ fun DurationSettingScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
+            state.selectedAppInfo?.let {
+                AlarmAppItem(it, true)
+            }
             DurationDisplay(
                 controller.normalTime.first,
                 controller.normalTime.second,
@@ -163,9 +166,6 @@ fun DurationSettingScreen(
                 }
             }
 
-            state.selectedAppInfo?.let {
-                AlarmAppItem(it, true)
-            }
         }
 
 
