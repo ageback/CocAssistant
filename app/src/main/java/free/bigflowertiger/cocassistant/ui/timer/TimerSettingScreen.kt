@@ -115,8 +115,8 @@ fun DurationSettingScreen(
                     onValueChange = {
                         timerTitle = it
                     },
-                    placeholder = {
-                        Text(text = "计时器名称")
+                    label = {
+                        Text("计时器名称")
                     },
                     modifier = Modifier
                         .gridItem(columnSpan = 3)
