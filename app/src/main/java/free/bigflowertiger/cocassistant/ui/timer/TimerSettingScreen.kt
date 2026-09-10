@@ -1,9 +1,11 @@
 package free.bigflowertiger.cocassistant.ui.timer
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Grid
 import androidx.compose.foundation.layout.GridTrackSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -32,8 +34,6 @@ import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
-import free.bigflowertiger.cocassistant.ui.timer.inputpad.TimerPreset
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
@@ -75,8 +75,10 @@ fun DurationSettingScreen(
     ) { innerPadding ->
         Column(
             modifier = modifier
+                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Bottom
         ) {
             DurationDisplay(
                 controller.normalTime.first,
@@ -183,5 +185,4 @@ fun DurationSettingScreen(
             )
         }
     }
-
 }
