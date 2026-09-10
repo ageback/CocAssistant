@@ -87,12 +87,12 @@ fun DurationSettingScreen(
                 .padding(16.dp)
         ) {
             DurationDisplay(
-                controller.hours,
-                controller.minutes,
-                controller.seconds
+                controller.normalTime.first,
+                controller.normalTime.second,
+                controller.normalTime.third
             )
             DurationDisplay(
-                controller.speedupTime.first.toInt(),
+                controller.speedupTime.first,
                 controller.speedupTime.second,
                 controller.speedupTime.third,
                 MaterialTheme.colorScheme.error

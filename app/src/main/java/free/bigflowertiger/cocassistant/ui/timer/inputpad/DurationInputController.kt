@@ -16,44 +16,23 @@ class DurationInputController(
     private var digits by mutableLongStateOf(
         durationToDigits(initialDuration)
     )
-    private var multiples by mutableIntStateOf(1)
 
-    val hours: Int
-        get() = (digits / 10_000).toInt()
+    /**
+     * 加速倍数
+     */
+    private var scale by mutableIntStateOf(1)
 
-    val minutes: Int
-        get() = ((digits / 100) % 100).toInt()
+    val normalTime: Triple<Int, Int, Int> get() = duration.toHms()
 
-    val seconds: Int
-        get() = (digits % 100).toInt()
+    val speedupTime: Triple<Int, Int, Int> get() = duration.div(scale).toHms()
 
-    val speedupTime: Triple<Long, Int, Int>
-        get() = (duration.inWholeSeconds / multiples).seconds
-            .toComponents { hours, minutes, seconds, _ ->
-                Triple(hours, minutes, seconds)
-            }
+    private val duration: Duration get() = getValidTotalSeconds().seconds
 
-    private val speedupDigits get() = durationToDigits(duration) / multiples
-    val speedupHours: Int
-        get() = (speedupDigits / 10_000).toInt()
-
-    val speedupMinutes: Int
-        get() = ((speedupDigits / 100) % 100).toInt()
-
-    val speedupSeconds: Int
-        get() = (speedupDigits % 100).toInt()
-
-    private val duration: Duration get() = getTotalSeconds().seconds
-//    get() = hours.hours + minutes.minutes + seconds.seconds
-
-    val isZero: Boolean get() = digits == 0L
-
-    val displayText: String get() = "%02d小时%02d分%02d秒".format(hours, minutes, seconds)
 
     val durationByMultiple: Long
         get() {
             digits = durationToDigits(duration)
-            return duration.inWholeMilliseconds / multiples
+            return duration.inWholeMilliseconds / scale
         }
 
 
@@ -67,7 +46,7 @@ class DurationInputController(
         }
     }
 
-    fun getTotalSeconds(): Long {
+    fun getValidTotalSeconds(): Long {
         val h = digits / 10_000
         val m = (digits / 100) % 100
         val s = digits % 100
@@ -79,7 +58,7 @@ class DurationInputController(
     }
 
     fun changeMultiples(multiples: Int) {
-        this.multiples = multiples
+        this.scale = multiples
     }
 
     fun appendDoubleZero() {
@@ -102,26 +81,18 @@ class DurationInputController(
         digits = durationToDigits(duration)
     }
 
-    private fun isValid(value: Long): Boolean {
-        val h = value / 10_000
-        val m = (value / 100) % 100
-        val s = value % 100
+    private fun durationToDigits(duration: Duration): Long {
 
-        return h <= maxHours &&
-                m <= 59 &&
-                s <= 59
+        val time = duration.toHms()
+        require(time.first <= maxHours)
+
+        return (time.first * 10_000 + time.second * 100 + time.third).toLong()
     }
 
-    private fun durationToDigits(duration: Duration): Long {
-        val totalSeconds = duration.inWholeSeconds
-
-        val h = totalSeconds / 3600
-        val m = (totalSeconds / 60) % 60
-        val s = totalSeconds % 60
-
-        require(h <= maxHours)
-
-        return h * 10_000 + m * 100 + s
+    private fun Duration.toHms(): Triple<Int, Int, Int> {
+        return this.toComponents { hours, minutes, seconds, _ ->
+            Triple(hours.toInt(), minutes, seconds)
+        }
     }
 
 }
