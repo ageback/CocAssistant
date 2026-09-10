@@ -30,7 +30,7 @@ class DurationInputController(
         get() = (digits % 100).toInt()
 
 
-    private val speedupDigits get() = digits / multiples
+    private val speedupDigits get() = durationToDigits(duration) / multiples
     val speedupHours: Int
         get() = (speedupDigits / 10_000).toInt()
 
@@ -46,6 +46,12 @@ class DurationInputController(
     val isZero: Boolean get() = digits == 0L
 
     val displayText: String get() = "%02d小时%02d分%02d秒".format(hours, minutes, seconds)
+
+    val durationByMultiple: Long
+        get() {
+            digits = durationToDigits(duration)
+            return duration.inWholeMilliseconds / multiples
+        }
 
     fun appendDigit(digit: Int) {
         require(digit in 0..9)
@@ -114,8 +120,4 @@ class DurationInputController(
         return h * 10_000 + m * 100 + s
     }
 
-    fun getDurationByMultiple(multiple: Int): Long {
-        digits = durationToDigits(duration)
-        return duration.inWholeMilliseconds / multiple
-    }
 }

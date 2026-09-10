@@ -181,7 +181,7 @@ fun DurationSettingScreen(
                         onSave(
                             TimerData(
                                 timerTitle,
-                                controller.getDurationByMultiple(multiples[selectedMultipleIndex].multiples)
+                                controller.durationByMultiple
                             ),
                             state.selectedAppInfo
                         )
