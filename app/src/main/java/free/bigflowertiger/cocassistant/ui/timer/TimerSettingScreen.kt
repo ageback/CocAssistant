@@ -46,16 +46,15 @@ fun DurationSettingScreen(
     val controller by remember { mutableStateOf(DurationInputController()) }
 
     var selectedMultipleIndex by remember { mutableIntStateOf(0) }
-    var selectedPresetIndex by remember { mutableIntStateOf(0) }
     val multiples = listOf(
-        DurationMultiples("常规", "不加速", 1),
+        DurationMultiples("不加速", "不加速", 1),
         DurationMultiples("建筑工人10倍速", "10倍加速", 10),
         DurationMultiples("实验室24倍速", "24倍加速", 24)
     )
 
 
     // 定时器名称
-    var timerTitle by remember { mutableStateOf("COC计时器") }
+    var timerTitle by remember { mutableStateOf("不加速") }
 
     val (showAppListDialog, toggleAppListDialog) = remember { mutableStateOf(false) }
 
@@ -98,28 +97,6 @@ fun DurationSettingScreen(
                     gap(8.dp)
                 }
             ) {
-                // 加速倍数
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .gridItem(columnSpan = 3),
-                ) {
-                    multiples.forEachIndexed { index, multiple ->
-                        SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = multiples.size
-                            ),
-                            onClick = {
-                                selectedMultipleIndex = index
-                                timerTitle = multiples[index].title
-                                controller.changeMultiples(multiples[index].multiples)
-                            },
-                            selected = index == selectedMultipleIndex,
-                            label = { Text(multiple.label) }
-                        )
-                    }
-                }
                 OutlinedTextField(
                     value = timerTitle,
                     onValueChange = {
@@ -144,6 +121,30 @@ fun DurationSettingScreen(
                 PainterIconCard(onLongClick = {
                     controller.clear()
                 }) { controller.backspace() }
+
+                // 加速倍数
+                SingleChoiceSegmentedButtonRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .gridItem(columnSpan = 3),
+                ) {
+                    multiples.forEachIndexed { index, multiple ->
+                        SegmentedButton(
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = multiples.size
+                            ),
+                            onClick = {
+                                selectedMultipleIndex = index
+                                timerTitle = multiples[index].title
+                                controller.changeMultiples(multiples[index].multiples)
+                            },
+                            selected = index == selectedMultipleIndex,
+                            label = { Text(multiple.label) }
+                        )
+                    }
+                }
+
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
