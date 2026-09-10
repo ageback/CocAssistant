@@ -1,11 +1,9 @@
 package free.bigflowertiger.cocassistant.ui.timer
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Grid
 import androidx.compose.foundation.layout.GridTrackSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -20,6 +18,7 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +34,6 @@ import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputControlle
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.TimerPreset
 import kotlin.time.Duration.Companion.seconds
-import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
@@ -53,12 +51,6 @@ fun DurationSettingScreen(
         DurationMultiples("常规", "不加速", 1),
         DurationMultiples("建筑工人10倍速", "10倍加速", 10),
         DurationMultiples("实验室24倍速", "24倍加速", 24)
-    )
-
-    val presets = listOf(
-        TimerPreset("1分钟", 60),
-        TimerPreset("10分钟", 60 * 10),
-        TimerPreset("30分钟", 60 * 30)
     )
 
 
@@ -100,33 +92,10 @@ fun DurationSettingScreen(
             Grid(
                 config = {
                     repeat(3) { column(0.33f) }
-                    repeat(11) { row(GridTrackSize.Auto) }
+                    repeat(10) { row(GridTrackSize.Auto) }
                     gap(8.dp)
                 }
             ) {
-                // 预设计时器
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .gridItem(columnSpan = 3),
-                ) {
-                    presets.forEachIndexed { index, timer ->
-                        SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = presets.size
-                            ),
-                            onClick = {
-                                selectedPresetIndex = index
-                                controller.setDuration(timer.durationSeconds.seconds)
-                            },
-
-                            selected = index == selectedPresetIndex,
-                            label = { Text(timer.title) }
-                        )
-                    }
-                }
-
                 // 加速倍数
                 SingleChoiceSegmentedButtonRow(
                     modifier = Modifier
