@@ -60,15 +60,17 @@ fun DurationSettingScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    toggleAppListDialog(true)
+            if (state.detectAlarmApps) {
+                FloatingActionButton(
+                    onClick = {
+                        toggleAppListDialog(true)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_stat_timer),
+                        contentDescription = "选择闹钟程序"
+                    )
                 }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_stat_timer),
-                    contentDescription = "选择闹钟程序"
-                )
             }
         }
     ) { innerPadding ->
@@ -79,6 +81,14 @@ fun DurationSettingScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
+            if (!state.detectAlarmApps) {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = "未检测到其他时钟程序，本程序无法独立启动倒计时！",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
             state.selectedAppInfo?.let {
                 AlarmAppItem(it, true)
             }
