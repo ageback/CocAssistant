@@ -40,8 +40,8 @@ class DurationInputController(
     val speedupSeconds: Int
         get() = (speedupDigits % 100).toInt()
 
-    val duration: Duration
-        get() = hours.hours + minutes.minutes + seconds.seconds
+    private val duration: Duration get() = getTotalSeconds().seconds
+//    get() = hours.hours + minutes.minutes + seconds.seconds
 
     val isZero: Boolean get() = digits == 0L
 
@@ -52,9 +52,20 @@ class DurationInputController(
 
         val newValue = digits * 10 + digit
 
-        if (newValue <= 999999 && isValid(newValue)) {
+        if (newValue <= 999999) {
             digits = newValue
         }
+    }
+
+    fun getTotalSeconds(): Long {
+        val h = digits / 10_000
+        val m = (digits / 100) % 100
+        val s = digits % 100
+
+        val totalSeconds = h * 3600 + m * 60 + s
+        val maxSeconds = maxHours * 3600L + 59 * 60 + 59
+
+        return totalSeconds.coerceAtMost(maxSeconds)
     }
 
     fun changeMultiples(multiples: Int) {
@@ -64,9 +75,7 @@ class DurationInputController(
     fun appendDoubleZero() {
         val newValue = digits * 100
 
-        if (newValue <= 999999 &&
-            isValid(newValue)
-        ) {
+        if (newValue <= 999999) {
             digits = newValue
         }
     }
@@ -105,5 +114,8 @@ class DurationInputController(
         return h * 10_000 + m * 100 + s
     }
 
-    fun getDurationByMultiple(multiple: Int): Long = duration.inWholeMilliseconds / multiple
+    fun getDurationByMultiple(multiple: Int): Long {
+        digits = durationToDigits(duration)
+        return duration.inWholeMilliseconds / multiple
+    }
 }
