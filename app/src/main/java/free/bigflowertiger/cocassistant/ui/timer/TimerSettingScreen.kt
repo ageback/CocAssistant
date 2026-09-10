@@ -92,9 +92,9 @@ fun DurationSettingScreen(
                 controller.seconds
             )
             DurationDisplay(
-                controller.speedupHours,
-                controller.speedupMinutes,
-                controller.speedupSeconds,
+                controller.speedupTime.first.toInt(),
+                controller.speedupTime.second,
+                controller.speedupTime.third,
                 MaterialTheme.colorScheme.error
             )
             Grid(

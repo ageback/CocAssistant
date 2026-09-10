@@ -6,8 +6,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.setValue
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Stable
@@ -29,6 +27,11 @@ class DurationInputController(
     val seconds: Int
         get() = (digits % 100).toInt()
 
+    val speedupTime: Triple<Long, Int, Int>
+        get() = (duration.inWholeSeconds / multiples).seconds
+            .toComponents { hours, minutes, seconds, _ ->
+                Triple(hours, minutes, seconds)
+            }
 
     private val speedupDigits get() = durationToDigits(duration) / multiples
     val speedupHours: Int
@@ -52,6 +55,7 @@ class DurationInputController(
             digits = durationToDigits(duration)
             return duration.inWholeMilliseconds / multiples
         }
+
 
     fun appendDigit(digit: Int) {
         require(digit in 0..9)
