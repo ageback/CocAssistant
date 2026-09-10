@@ -22,7 +22,14 @@ class DurationInputController(
      */
     private var scale by mutableIntStateOf(1)
 
-    val normalTime: Triple<Int, Int, Int> get() = duration.toHms()
+    val hours: Int
+        get() = (digits / 10_000).toInt()
+
+    val minutes: Int
+        get() = ((digits / 100) % 100).toInt()
+
+    val seconds: Int
+        get() = (digits % 100).toInt()
 
     val speedupTime: Triple<Int, Int, Int> get() = duration.div(scale).toHms()
 
@@ -82,11 +89,14 @@ class DurationInputController(
     }
 
     private fun durationToDigits(duration: Duration): Long {
+        val totalSeconds = duration.inWholeSeconds
+        val h = totalSeconds / 3600
+        val m = (totalSeconds / 60) % 60
+        val s = totalSeconds % 60
 
-        val time = duration.toHms()
-        require(time.first <= maxHours)
+        require(h <= maxHours)
 
-        return (time.first * 10_000 + time.second * 100 + time.third).toLong()
+        return h * 10_000 + m * 100 + s
     }
 
     private fun Duration.toHms(): Triple<Int, Int, Int> {

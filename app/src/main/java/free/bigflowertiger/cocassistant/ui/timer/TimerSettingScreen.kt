@@ -83,9 +83,9 @@ fun DurationSettingScreen(
                 AlarmAppItem(it, true)
             }
             DurationDisplay(
-                controller.normalTime.first,
-                controller.normalTime.second,
-                controller.normalTime.third
+                controller.hours,
+                controller.minutes,
+                controller.seconds
             )
             DurationDisplay(
                 controller.speedupTime.first,
@@ -121,9 +121,11 @@ fun DurationSettingScreen(
 
                 TextCard(label = "00") { controller.appendDoubleZero() }
                 TextCard(label = "0") { controller.appendDigit(it.toInt()) }
-                PainterIconCard(onLongClick = {
-                    controller.clear()
-                }) { controller.backspace() }
+                PainterIconCard(
+                    onLongClick = {
+                        controller.clear()
+                    }
+                ) { controller.backspace() }
 
                 // 加速倍数
                 SingleChoiceSegmentedButtonRow(
