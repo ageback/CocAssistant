@@ -36,7 +36,7 @@ class DurationInputController(
     private val duration: Duration get() = getValidTotalSeconds().seconds
 
 
-    val durationByMultiple: Long
+    val durationByScale: Long
         get() {
             digits = durationToDigits(duration)
             return duration.inWholeMilliseconds / scale

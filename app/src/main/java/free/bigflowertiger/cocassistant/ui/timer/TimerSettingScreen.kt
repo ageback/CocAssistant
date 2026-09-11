@@ -168,10 +168,11 @@ fun DurationSettingScreen(
                         onSave(
                             TimerData(
                                 timerTitle,
-                                controller.durationByMultiple
+                                controller.durationByScale
                             ),
                             state.selectedAppInfo
                         )
+                        controller.clear()
                     }
                 ) {
                     Text(text = "启动计时器")
