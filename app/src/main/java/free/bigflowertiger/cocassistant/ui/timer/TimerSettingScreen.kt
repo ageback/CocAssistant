@@ -1,15 +1,18 @@
 package free.bigflowertiger.cocassistant.ui.timer
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Grid
 import androidx.compose.foundation.layout.GridTrackSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +29,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -44,6 +48,8 @@ fun DurationSettingScreen(
     val viewModel = hiltViewModel<TimerSettingViewModel>()
     val state by viewModel.state.collectAsState()
     val controller by remember { mutableStateOf(DurationInputController()) }
+
+    val (resetAfterStart, toggleAutoReset) = remember { mutableStateOf(true) }
 
     var selectedMultipleIndex by remember { mutableIntStateOf(0) }
     val multiples = listOf(
@@ -160,6 +166,25 @@ fun DurationSettingScreen(
                     }
                 }
 
+                Row(
+                    modifier = Modifier.gridItem(columnSpan = 3),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = resetAfterStart,
+                        onCheckedChange = {
+                            toggleAutoReset(it)
+                        }
+                    )
+                    Text(
+                        text = "启动后清零",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.clickable(onClick = {
+                            toggleAutoReset(!resetAfterStart)
+                        })
+                    )
+                }
+
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -172,7 +197,9 @@ fun DurationSettingScreen(
                             ),
                             state.selectedAppInfo
                         )
-                        controller.clear()
+                        if (resetAfterStart) {
+                            controller.clear()
+                        }
                     }
                 ) {
                     Text(text = "启动计时器")
