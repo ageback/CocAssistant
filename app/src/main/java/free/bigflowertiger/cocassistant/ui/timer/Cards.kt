@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -60,7 +61,8 @@ fun PainterIconCard(
         onLongClick = onLongClick
     ) {
         Icon(
-            painter = painterResource(R.drawable.backspace_24px),
+            painter = painterResource(R.drawable.backspace_48px),
+            modifier = Modifier.size(32.dp),
             contentDescription = "回退"
         )
     }
