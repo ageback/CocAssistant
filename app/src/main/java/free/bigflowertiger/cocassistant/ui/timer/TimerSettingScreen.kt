@@ -49,7 +49,6 @@ fun DurationSettingScreen(
     val state by viewModel.state.collectAsState()
     val controller by remember { mutableStateOf(DurationInputController()) }
 
-    val (resetAfterStart, toggleAutoReset) = remember { mutableStateOf(true) }
 
     var selectedMultipleIndex by remember { mutableIntStateOf(0) }
     val multiples = listOf(
@@ -171,16 +170,16 @@ fun DurationSettingScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = resetAfterStart,
+                        checked = state.resetAfterStart,
                         onCheckedChange = {
-                            toggleAutoReset(it)
+                            viewModel.onEvent(TimerSettingEvent.CheckResetAfterStart(it))
                         }
                     )
                     Text(
                         text = "启动后清零",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.clickable(onClick = {
-                            toggleAutoReset(!resetAfterStart)
+                            viewModel.onEvent(TimerSettingEvent.CheckResetAfterStart(!state.resetAfterStart))
                         })
                     )
                 }
@@ -197,7 +196,7 @@ fun DurationSettingScreen(
                             ),
                             state.selectedAppInfo
                         )
-                        if (resetAfterStart) {
+                        if (state.resetAfterStart) {
                             controller.clear()
                         }
                     }

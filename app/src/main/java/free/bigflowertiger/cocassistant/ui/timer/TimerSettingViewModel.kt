@@ -26,6 +26,7 @@ class TimerSettingViewModel @Inject constructor(
     init {
         effect {
             val selectedAppId = DatastoreRepository.selectedAlarmAppId.get()
+            val resetAfterStart = DatastoreRepository.resetAfterStart.getOrDefault()
             val appList = queryAlarmApps()
             val selectedApp = selectedAppId?.let {
                 appList.find { app -> app.packageName == it }
@@ -33,6 +34,7 @@ class TimerSettingViewModel @Inject constructor(
             _state.update { stt ->
                 stt.copy(
                     selectedAppInfo = selectedApp,
+                    resetAfterStart = resetAfterStart,
                     alarmApps = appList
                 )
             }
@@ -45,6 +47,13 @@ class TimerSettingViewModel @Inject constructor(
                 _state.update { it.copy(selectedAppInfo = event.app) }
                 effect {
                     DatastoreRepository.selectedAlarmAppId.set(event.app.packageName)
+                }
+            }
+
+            is TimerSettingEvent.CheckResetAfterStart -> {
+                _state.update { it.copy(resetAfterStart = event.autoReset) }
+                effect {
+                    DatastoreRepository.resetAfterStart.set(event.autoReset)
                 }
             }
         }
