@@ -33,11 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
+import free.bigflowertiger.cocassistant.ui.timer.inputpad.SmallerDurationDisplay
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
@@ -102,11 +104,11 @@ fun DurationSettingScreen(
                 controller.minutes,
                 controller.seconds
             )
-            DurationDisplay(
-                controller.speedupTime.first,
-                controller.speedupTime.second,
-                controller.speedupTime.third,
-                MaterialTheme.colorScheme.error
+            SmallerDurationDisplay(
+                hours = controller.speedupTime.first,
+                minutes = controller.speedupTime.second,
+                seconds = controller.speedupTime.third,
+                color = MaterialTheme.colorScheme.error
             )
             Grid(
                 config = {
