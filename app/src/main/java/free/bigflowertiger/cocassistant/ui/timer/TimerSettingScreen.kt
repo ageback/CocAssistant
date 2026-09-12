@@ -33,12 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
-import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationMultiples
+import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationScales
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.SmallerDurationDisplay
 
 @OptIn(ExperimentalGridApi::class)
@@ -50,15 +49,15 @@ fun DurationSettingScreen(
     val viewModel = hiltViewModel<TimerSettingViewModel>()
     val state by viewModel.state.collectAsState()
     val controller by remember { mutableStateOf(DurationInputController()) }
-
-
     var selectedMultipleIndex by remember { mutableIntStateOf(0) }
-    val multiples = listOf(
-        DurationMultiples("不加速", "不加速", 1),
-        DurationMultiples("建筑工人10倍速", "10倍加速", 10),
-        DurationMultiples("实验室24倍速", "24倍加速", 24)
+
+    val scales = listOf(
+        DurationScales("不加速", "不加速", 1),
+        DurationScales("建筑工人10倍速", "10倍加速", 10, true),
+        DurationScales("实验室24倍速", "24倍加速", 24, true)
     )
 
+    var selectedScale = scales[0]
 
     // 定时器名称
     var timerTitle by remember { mutableStateOf("不加速") }
@@ -104,12 +103,15 @@ fun DurationSettingScreen(
                 controller.minutes,
                 controller.seconds
             )
-            SmallerDurationDisplay(
-                hours = controller.speedupTime.first,
-                minutes = controller.speedupTime.second,
-                seconds = controller.speedupTime.third,
-                color = MaterialTheme.colorScheme.error
-            )
+
+            if (selectedScale.showScaledTitle) {
+                SmallerDurationDisplay(
+                    hours = controller.speedupTime.first,
+                    minutes = controller.speedupTime.second,
+                    seconds = controller.speedupTime.third,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             Grid(
                 config = {
                     repeat(3) { column(0.33f) }
@@ -150,16 +152,17 @@ fun DurationSettingScreen(
                         .fillMaxWidth()
                         .gridItem(columnSpan = 3),
                 ) {
-                    multiples.forEachIndexed { index, multiple ->
+                    scales.forEachIndexed { index, multiple ->
                         SegmentedButton(
                             shape = SegmentedButtonDefaults.itemShape(
                                 index = index,
-                                count = multiples.size
+                                count = scales.size
                             ),
                             onClick = {
                                 selectedMultipleIndex = index
-                                timerTitle = multiples[index].title
-                                controller.changeMultiples(multiples[index].multiples)
+                                selectedScale = scales[index]
+                                timerTitle = selectedScale.title
+                                controller.changeMultiples(selectedScale.scale)
                             },
                             selected = index == selectedMultipleIndex,
                             label = { Text(multiple.label) }
