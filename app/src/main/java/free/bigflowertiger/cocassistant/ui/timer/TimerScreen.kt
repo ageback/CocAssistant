@@ -35,29 +35,32 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
+import free.bigflowertiger.cocassistant.ui.timer.TimerUiEvent.CheckResetAfterStart
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
-import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.SmallerDurationDisplay
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
-fun DurationSettingScreen(
+fun TImerScreen(
     modifier: Modifier = Modifier,
     onSave: (timerData: TimerData, app: AlarmAppInfo?) -> Unit
 ) {
-    val viewModel = hiltViewModel<TimerSettingViewModel>()
-    val state by viewModel.state.collectAsState()
-    val controller by remember { mutableStateOf(DurationInputController()) }
-    var selectedMultipleIndex by remember { mutableIntStateOf(0) }
+    val viewModel = hiltViewModel<TimerViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+    val controller = viewModel.controller
+//    val durationState by viewModel.durationState.collectAsState()
+
+//    val controller by remember { mutableStateOf(DurationInputController()) }
+    var selectedScaleIndex by remember { mutableIntStateOf(0) }
 
     // 定时器名称
-    var timerTitle by remember { mutableStateOf("不加速") }
+//    var timerTitle by remember { mutableStateOf("不加速") }
 
     val (showAppListDialog, toggleAppListDialog) = remember { mutableStateOf(false) }
 
     Scaffold(
         floatingActionButton = {
-            if (state.detectAlarmApps) {
+            if (uiState.detectAlarmApps) {
                 FloatingActionButton(
                     onClick = {
                         toggleAppListDialog(true)
@@ -78,7 +81,7 @@ fun DurationSettingScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
-            if (!state.detectAlarmApps) {
+            if (!uiState.detectAlarmApps) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
                     text = "未检测到其他时钟程序，本程序无法独立启动倒计时！",
@@ -86,7 +89,7 @@ fun DurationSettingScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            state.selectedAppInfo?.let {
+            uiState.selectedAppInfo?.let {
                 AlarmAppItem(it, true)
             }
             DurationDisplay(
@@ -95,7 +98,7 @@ fun DurationSettingScreen(
                 controller.seconds
             )
 
-            if (state.selectedScale.showScaledTitle) {
+            if (uiState.selectedScale.showScaledTitle) {
                 SmallerDurationDisplay(
                     hours = controller.speedupTime.first,
                     minutes = controller.speedupTime.second,
@@ -111,9 +114,9 @@ fun DurationSettingScreen(
                 }
             ) {
                 OutlinedTextField(
-                    value = timerTitle,
+                    value = uiState.timerTitle,
                     onValueChange = {
-                        timerTitle = it
+                        viewModel.onUiEvent(TimerUiEvent.SetTimerTitle(it))
                     },
                     label = {
                         Text("计时器名称")
@@ -125,17 +128,21 @@ fun DurationSettingScreen(
                 repeat(9) { index ->
                     val number = index + 1
                     NumberCard(number = number) {
-                        controller.appendDigit(number)
+                        viewModel.onDurationEvent(DurationEvent.AppendDigit(number))
                     }
                 }
 
-                TextCard(label = "00") { controller.appendDoubleZero() }
-                TextCard(label = "0") { controller.appendDigit(it.toInt()) }
+                TextCard(label = "00") { viewModel.onDurationEvent(DurationEvent.AppendDoubleZero) }
+                TextCard(label = "0") {
+                    viewModel.onDurationEvent(DurationEvent.AppendDigit(it.toInt()))
+                }
                 PainterIconCard(
                     onLongClick = {
-                        controller.clear()
+                        viewModel.onDurationEvent(DurationEvent.Clear)
                     }
-                ) { controller.backspace() }
+                ) {
+                    viewModel.onDurationEvent(DurationEvent.Backspace)
+                }
 
                 // 加速倍数
                 SingleChoiceSegmentedButtonRow(
@@ -143,20 +150,18 @@ fun DurationSettingScreen(
                         .fillMaxWidth()
                         .gridItem(columnSpan = 3),
                 ) {
-                    state.scales.forEachIndexed { index, multiple ->
+                    uiState.scales.forEachIndexed { index, scale ->
                         SegmentedButton(
                             shape = SegmentedButtonDefaults.itemShape(
                                 index = index,
-                                count = state.scales.size
+                                count = uiState.scales.size
                             ),
                             onClick = {
-                                selectedMultipleIndex = index
-                                viewModel.onEvent(TimerSettingEvent.ChangeScale(index))
-                                timerTitle = state.selectedScale.title
-                                controller.changeScale(state.selectedScale.scale)
+                                selectedScaleIndex = index
+                                viewModel.onUiEvent(TimerUiEvent.SetScale(index))
                             },
-                            selected = index == selectedMultipleIndex,
-                            label = { Text(multiple.label) }
+                            selected = index == selectedScaleIndex,
+                            label = { Text(scale.label) }
                         )
                     }
                 }
@@ -166,17 +171,21 @@ fun DurationSettingScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = state.resetAfterStart,
+                        checked = uiState.resetAfterStart,
                         onCheckedChange = {
-                            viewModel.onEvent(TimerSettingEvent.CheckResetAfterStart(it))
+                            viewModel.onUiEvent(CheckResetAfterStart(it))
                         }
                     )
                     Text(
                         text = "启动后清零",
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.clickable(onClick = {
-                            viewModel.onEvent(TimerSettingEvent.CheckResetAfterStart(!state.resetAfterStart))
-                        })
+                        modifier = Modifier.clickable(
+                            onClick = {
+                                viewModel.onUiEvent(
+                                    CheckResetAfterStart(autoReset = !uiState.resetAfterStart)
+                                )
+                            }
+                        )
                     )
                 }
 
@@ -187,13 +196,13 @@ fun DurationSettingScreen(
                     onClick = {
                         onSave(
                             TimerData(
-                                timerTitle,
+                                uiState.timerTitle,
                                 controller.durationByScale
                             ),
-                            state.selectedAppInfo
+                            uiState.selectedAppInfo
                         )
-                        if (state.resetAfterStart) {
-                            controller.clear()
+                        if (uiState.resetAfterStart) {
+                            viewModel.onDurationEvent(DurationEvent.Clear)
                         }
                     }
                 ) {
@@ -210,10 +219,10 @@ fun DurationSettingScreen(
                 text = {
                     AlarmAppList(
                         selectedPackageName = "",
-                        apps = state.alarmApps,
+                        apps = uiState.alarmApps,
                         onAppSelected = {
                             toggleAppListDialog(false)
-                            viewModel.onEvent(TimerSettingEvent.ChangeSelectedApp(it))
+                            viewModel.onUiEvent(TimerUiEvent.SetSelectedApp(it))
                         }
                     )
                 },

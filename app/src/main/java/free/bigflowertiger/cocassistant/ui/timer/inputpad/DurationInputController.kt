@@ -5,10 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.setValue
+import javax.inject.Singleton
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Stable
+@Singleton
 class DurationInputController(
     initialDuration: Duration = Duration.ZERO,
     private val maxHours: Int = 99
@@ -16,6 +18,8 @@ class DurationInputController(
     private var digits by mutableLongStateOf(
         durationToDigits(initialDuration)
     )
+
+    private val duration: Duration get() = getValidTotalSeconds().seconds
 
     /**
      * 加速倍数
@@ -32,8 +36,6 @@ class DurationInputController(
         get() = (digits % 100).toInt()
 
     val speedupTime: Triple<Int, Int, Int> get() = duration.div(scale).toHms()
-
-    private val duration: Duration get() = getValidTotalSeconds().seconds
 
 
     val durationByScale: Long
@@ -64,8 +66,8 @@ class DurationInputController(
         return totalSeconds.coerceAtMost(maxSeconds)
     }
 
-    fun changeScale(multiples: Int) {
-        this.scale = multiples
+    fun changeScale(scale: Int) {
+        this.scale = scale
     }
 
     fun appendDoubleZero() {

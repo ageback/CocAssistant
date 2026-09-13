@@ -3,7 +3,6 @@ package free.bigflowertiger.cocassistant
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
@@ -14,14 +13,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.LaunchedEffect
 import androidx.core.net.toUri
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import free.bigflowertiger.cocassistant.ui.theme.CocAssistantTheme
 import free.bigflowertiger.cocassistant.ui.timer.AlarmAppInfo
-import free.bigflowertiger.cocassistant.ui.timer.DurationSettingScreen
+import free.bigflowertiger.cocassistant.ui.timer.TImerScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -37,7 +34,7 @@ class MainActivity : ComponentActivity() {
 //        }
         setContent {
             CocAssistantTheme {
-                DurationSettingScreen { data, app ->
+                TImerScreen { data, app ->
                     startOSTimer(
                         data.timerNamer,
                         data.durationSeconds,
