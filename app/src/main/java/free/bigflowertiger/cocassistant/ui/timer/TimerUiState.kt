@@ -8,7 +8,7 @@ data class TimerUiState(
     val alarmApps: List<AlarmAppInfo> = emptyList(),
     val scales: List<DurationScales> = emptyList(),
     val selectedScale: DurationScales = DurationScales(),
-    val timerTitle: String = ""
+    val timerTitle: String = "不加速"
 ) {
     val detectAlarmApps: Boolean get() = alarmApps.isNotEmpty()
 }
