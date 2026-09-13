@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import free.bigflowertiger.cocassistant.data.DatastoreRepository
+import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationScales
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,7 +36,12 @@ class TimerSettingViewModel @Inject constructor(
                 stt.copy(
                     selectedAppInfo = selectedApp,
                     resetAfterStart = resetAfterStart,
-                    alarmApps = appList
+                    alarmApps = appList,
+                    scales = listOf(
+                        DurationScales("不加速", "不加速", 1),
+                        DurationScales("建筑工人10倍速", "10倍加速", 10, true),
+                        DurationScales("实验室24倍速", "24倍加速", 24, true)
+                    )
                 )
             }
         }
@@ -55,6 +61,10 @@ class TimerSettingViewModel @Inject constructor(
                 effect {
                     DatastoreRepository.resetAfterStart.set(event.autoReset)
                 }
+            }
+
+            is TimerSettingEvent.ChangeScale -> {
+                _state.update { it.copy(selectedScale = state.value.scales[event.index]) }
             }
         }
     }

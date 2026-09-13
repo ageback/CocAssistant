@@ -37,7 +37,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import free.bigflowertiger.cocassistant.R
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationDisplay
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
-import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationScales
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.SmallerDurationDisplay
 
 @OptIn(ExperimentalGridApi::class)
@@ -50,14 +49,6 @@ fun DurationSettingScreen(
     val state by viewModel.state.collectAsState()
     val controller by remember { mutableStateOf(DurationInputController()) }
     var selectedMultipleIndex by remember { mutableIntStateOf(0) }
-
-    val scales = listOf(
-        DurationScales("不加速", "不加速", 1),
-        DurationScales("建筑工人10倍速", "10倍加速", 10, true),
-        DurationScales("实验室24倍速", "24倍加速", 24, true)
-    )
-
-    var selectedScale = scales[0]
 
     // 定时器名称
     var timerTitle by remember { mutableStateOf("不加速") }
@@ -104,7 +95,7 @@ fun DurationSettingScreen(
                 controller.seconds
             )
 
-            if (selectedScale.showScaledTitle) {
+            if (state.selectedScale.showScaledTitle) {
                 SmallerDurationDisplay(
                     hours = controller.speedupTime.first,
                     minutes = controller.speedupTime.second,
@@ -152,17 +143,17 @@ fun DurationSettingScreen(
                         .fillMaxWidth()
                         .gridItem(columnSpan = 3),
                 ) {
-                    scales.forEachIndexed { index, multiple ->
+                    state.scales.forEachIndexed { index, multiple ->
                         SegmentedButton(
                             shape = SegmentedButtonDefaults.itemShape(
                                 index = index,
-                                count = scales.size
+                                count = state.scales.size
                             ),
                             onClick = {
                                 selectedMultipleIndex = index
-                                selectedScale = scales[index]
-                                timerTitle = selectedScale.title
-                                controller.changeMultiples(selectedScale.scale)
+                                viewModel.onEvent(TimerSettingEvent.ChangeScale(index))
+                                timerTitle = state.selectedScale.title
+                                controller.changeScale(state.selectedScale.scale)
                             },
                             selected = index == selectedMultipleIndex,
                             label = { Text(multiple.label) }

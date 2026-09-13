@@ -7,8 +7,8 @@ package free.bigflowertiger.cocassistant.ui.timer.inputpad
  * @property scale 倍数
  */
 data class DurationScales(
-    val title: String,
-    val label: String,
-    val scale: Int,
+    val title: String = "",
+    val label: String = "",
+    val scale: Int = 1,
     val showScaledTitle: Boolean = false
 )

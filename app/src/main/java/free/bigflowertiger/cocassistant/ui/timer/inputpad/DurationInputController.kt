@@ -64,7 +64,7 @@ class DurationInputController(
         return totalSeconds.coerceAtMost(maxSeconds)
     }
 
-    fun changeMultiples(multiples: Int) {
+    fun changeScale(multiples: Int) {
         this.scale = multiples
     }
 
