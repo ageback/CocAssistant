@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.AlarmClock
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import free.bigflowertiger.cocassistant.data.DatastoreRepository
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationScales
+import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,13 +26,11 @@ class TimerViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    val controller: DurationInputController = DurationInputController()
+    private val controller: DurationInputController = DurationInputController()
+    val durationState: State<DurationState> get() = controller.state
 
     private val _uiState = MutableStateFlow(TimerUiState())
     val uiState = _uiState.asStateFlow()
-
-//    private val _durationState = MutableStateFlow(DurationState())
-//    val durationState = _durationState.asStateFlow()
 
     init {
         effect {
@@ -46,8 +47,8 @@ class TimerViewModel @Inject constructor(
                     alarmApps = appList,
                     scales = listOf(
                         DurationScales("不加速", "不加速", 1),
-                        DurationScales("建筑工人10倍速", "10倍加速", 10, true),
-                        DurationScales("实验室24倍速", "24倍加速", 24, true)
+                        DurationScales("建筑工人10倍速", "10倍加速", 10),
+                        DurationScales("实验室24倍速", "24倍加速", 24)
                     )
                 )
             }

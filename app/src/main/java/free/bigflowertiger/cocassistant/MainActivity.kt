@@ -18,7 +18,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import free.bigflowertiger.cocassistant.ui.theme.CocAssistantTheme
 import free.bigflowertiger.cocassistant.ui.timer.AlarmAppInfo
-import free.bigflowertiger.cocassistant.ui.timer.TImerScreen
+import free.bigflowertiger.cocassistant.ui.timer.TimerScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 //        }
         setContent {
             CocAssistantTheme {
-                TImerScreen { data, app ->
+                TimerScreen { data, app ->
                     startOSTimer(
                         data.timerNamer,
                         data.durationSeconds,

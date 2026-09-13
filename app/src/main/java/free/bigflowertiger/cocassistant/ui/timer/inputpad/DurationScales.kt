@@ -9,6 +9,5 @@ package free.bigflowertiger.cocassistant.ui.timer.inputpad
 data class DurationScales(
     val title: String = "",
     val label: String = "",
-    val scale: Int = 1,
-    val showScaledTitle: Boolean = false
+    val scale: Int = 1
 )

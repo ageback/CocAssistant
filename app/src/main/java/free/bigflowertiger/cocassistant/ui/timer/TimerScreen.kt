@@ -41,20 +41,16 @@ import free.bigflowertiger.cocassistant.ui.timer.inputpad.SmallerDurationDisplay
 
 @OptIn(ExperimentalGridApi::class)
 @Composable
-fun TImerScreen(
+fun TimerScreen(
     modifier: Modifier = Modifier,
     onSave: (timerData: TimerData, app: AlarmAppInfo?) -> Unit
 ) {
     val viewModel = hiltViewModel<TimerViewModel>()
     val uiState by viewModel.uiState.collectAsState()
-    val controller = viewModel.controller
-//    val durationState by viewModel.durationState.collectAsState()
+    val durationState by viewModel.durationState
 
-//    val controller by remember { mutableStateOf(DurationInputController()) }
     var selectedScaleIndex by remember { mutableIntStateOf(0) }
 
-    // 定时器名称
-//    var timerTitle by remember { mutableStateOf("不加速") }
 
     val (showAppListDialog, toggleAppListDialog) = remember { mutableStateOf(false) }
 
@@ -93,19 +89,18 @@ fun TImerScreen(
                 AlarmAppItem(it, true)
             }
             DurationDisplay(
-                controller.hours,
-                controller.minutes,
-                controller.seconds
+                durationState.hours,
+                durationState.minutes,
+                durationState.seconds
             )
 
-            if (uiState.selectedScale.showScaledTitle) {
-                SmallerDurationDisplay(
-                    hours = controller.speedupTime.first,
-                    minutes = controller.speedupTime.second,
-                    seconds = controller.speedupTime.third,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
+            SmallerDurationDisplay(
+                hours = durationState.speedupTime.first,
+                minutes = durationState.speedupTime.second,
+                seconds = durationState.speedupTime.third,
+                color = MaterialTheme.colorScheme.error
+            )
+
             Grid(
                 config = {
                     repeat(3) { column(0.33f) }
@@ -197,7 +192,7 @@ fun TImerScreen(
                         onSave(
                             TimerData(
                                 uiState.timerTitle,
-                                controller.durationByScale
+                                durationState.durationByScale
                             ),
                             uiState.selectedAppInfo
                         )
