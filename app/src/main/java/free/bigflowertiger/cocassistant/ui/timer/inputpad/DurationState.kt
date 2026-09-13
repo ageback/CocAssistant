@@ -1,5 +1,6 @@
 package free.bigflowertiger.cocassistant.ui.timer.inputpad
 
+import free.bigflowertiger.cocassistant.ui.timer.toHms
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 

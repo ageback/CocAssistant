@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import free.bigflowertiger.cocassistant.data.DatastoreRepository
-import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationInputController
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationScales
 import free.bigflowertiger.cocassistant.ui.timer.inputpad.DurationState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,14 +19,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.collections.find
+import kotlin.time.Duration
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val controller: DurationInputController = DurationInputController()
-    val durationState: State<DurationState> get() = controller.state
+    private val _durationState = mutableStateOf(DurationState())
+    val durationState: State<DurationState> = _durationState
 
     private val _uiState = MutableStateFlow(TimerUiState())
     val uiState = _uiState.asStateFlow()
@@ -58,19 +58,19 @@ class TimerViewModel @Inject constructor(
     fun onDurationEvent(event: DurationEvent) {
         when (event) {
             is DurationEvent.AppendDigit -> {
-                controller.appendDigit(event.digit)
+                appendDigit(event.digit)
             }
 
             DurationEvent.AppendDoubleZero -> {
-                controller.appendDoubleZero()
+                appendDoubleZero()
             }
 
             DurationEvent.Backspace -> {
-                controller.backspace()
+                backspace()
             }
 
             DurationEvent.Clear -> {
-                controller.clear()
+                clear()
             }
         }
 
@@ -94,7 +94,7 @@ class TimerViewModel @Inject constructor(
 
             is TimerUiEvent.SetScale -> {
                 val selectedScale = uiState.value.scales[event.index]
-                controller.changeScale(selectedScale.scale)
+                changeScale(selectedScale.scale)
                 _uiState.update {
                     it.copy(
                         selectedScale = selectedScale,
@@ -105,6 +105,39 @@ class TimerViewModel @Inject constructor(
 
             is TimerUiEvent.SetTimerTitle -> TODO()
         }
+    }
+
+    fun appendDigit(digit: Int) {
+        require(digit in 0..9)
+
+        val newValue = _durationState.value.digits * 10 + digit
+
+        if (newValue <= 999999) {
+            _durationState.value = _durationState.value.copy(digits = newValue)
+        }
+    }
+
+
+    fun changeScale(scale: Int) {
+        _durationState.value = _durationState.value.copy(scale = scale)
+    }
+
+    fun appendDoubleZero() {
+        val newValue = _durationState.value.digits * 100
+
+        if (newValue <= 999999) {
+            _durationState.value = _durationState.value.copy(digits = newValue)
+        }
+    }
+
+    fun backspace() {
+        _durationState.value = _durationState.value.copy(
+            digits = _durationState.value.digits / 10
+        )
+    }
+
+    fun clear() {
+        _durationState.value = _durationState.value.copy(digits = 0)
     }
 
     fun queryAlarmApps(): List<AlarmAppInfo> {
@@ -140,3 +173,9 @@ class TimerViewModel @Inject constructor(
 
 fun ViewModel.effect(block: suspend () -> Unit) = viewModelScope
     .launch { block() }
+
+fun Duration.toHms(): Triple<Int, Int, Int> {
+    return this.toComponents { hours, minutes, seconds, _ ->
+        Triple(hours.toInt(), minutes, seconds)
+    }
+}
